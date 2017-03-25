@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name         HLC
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Add annotation function to the current webpage.
+// @author       Lei Pi <lowatt.pi@gmail.com>
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    // start of hlc
+    
