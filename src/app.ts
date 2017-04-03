@@ -60,12 +60,13 @@ export class App {
     ReactDOM.render(ftntEl, container);
   }
 
-  highlightSelection(){
+  highlightSelection(): boolean{
     let block: Block = extractSelectedBlock(window, document);
     if (block == null) {
-      return;
+      return false;
     }
     let decoratedBlock: DecoratedBlock = new DecoratedBlockFactory(block).make();
     this.addBlock(decoratedBlock);
+    return true;
   }
 }
