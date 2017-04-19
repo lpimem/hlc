@@ -13,7 +13,7 @@ It will not have any permission to access your data on google.
 
 ![](https://github.com/lpimem/hlc/raw/38c2d7d0ea2a08ac23c67bd0608441b27b0dfced/screenshots/highlight%20mode.gif)
 
-You can also use keyboard shortcut `(left) Alt + V` when no text is selected. 
+You can also use keyboard shortcut `(left) alt + v` when no text is selected. 
 
 To exit highlight mode, click the icon again or press the shortcut again. 
 
@@ -22,6 +22,12 @@ To exit highlight mode, click the icon again or press the shortcut again.
 
 ![](https://github.com/lpimem/hlc/raw/38c2d7d0ea2a08ac23c67bd0608441b27b0dfced/screenshots/highlight%20once.gif) 
 
-You can also use keyboard shortcut `(left) Alt + V` when the text is selected. 
+You can also use keyboard shortcut `(left) alt + v` when the text is selected. 
 
+## 4. Generate notes in Markdown format
 
+![](https://github.com/lpimem/hlc/raw/97848028423373112a4eb89e8fe8363c3edcfab5/screenshots/generate_notes.gif)
+
+Keyboard shortcut: `Ctrl + g`
+
+## [Try it out!](https://github.com/lpimem/hlc/releases)

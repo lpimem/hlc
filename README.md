@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/lpimem/hlc.svg?branch=master)](https://travis-ci.org/lpimem/hlc)
 ----
-A free open-source web-page annotation plug-in. This project is also an example application of [rangeblock](https://github.com/lpimem/rangeblock).
+A free open-source web-page annotation plug-in. This project is built upon [rangeblock](https://github.com/lpimem/rangeblock).
+
+![](https://github.com/lpimem/hlc/raw/38c2d7d0ea2a08ac23c67bd0608441b27b0dfced/screenshots/highlight%20mode.gif)
 
 <img align="right" height="300" src='https://github.com/lpimem/hlc/blob/master/icon/pen-1280.png'>
 
@@ -13,6 +15,16 @@ A free open-source web-page annotation plug-in. This project is also an example 
 - [x] persistant storage 
 - [x] Google Sign-In
 - [ ] More test and bug fix
+
+## Download
+
+There isn't any stable release yet. 
+
+You can try the test version in [release page](https://github.com/lpimem/hlc/releases). 
+
+## Usage 
+
+Please find the detailed guide in [How to use](https://github.com/lpimem/hlc/blob/master/How-To-Use.MD).
 
 ## Preview Screenshots
 
@@ -32,4 +44,8 @@ A free open-source web-page annotation plug-in. This project is also an example 
 
 ## Credit
 
-Icon created by [OpenClipart-Vectors](https://pixabay.com/en/users/OpenClipart-Vectors-30363/)
+Logo icon is created by [OpenClipart-Vectors](https://pixabay.com/en/users/OpenClipart-Vectors-30363/)
+
+## About me
+
+I'm a MS student from University of Memphis. If you are interested in hiring me, please find my CV [here](https://www.dropbox.com/s/xxpulpqeenki1f0/LeiPi_grad_ms_cs_v2.pdf?dl=0). 
