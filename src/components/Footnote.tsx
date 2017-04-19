@@ -1,20 +1,18 @@
-import { debug } from '../util/log';
-import { Item } from './Item';
-import { DecoratedBlock } from '../decorator/decorated_block';
+import { BlockStyle } from '../decorator/block_style';
+import { debug } from 'logez';
+import { Item, ItemProps, RowOptions } from './Item';
 import * as React from "react";
 
 interface FootnoteProps {
-  id: string
-  source?: {
-    get: ()=>DecoratedBlock[]
-    poll: boolean
-    interval?: number
-  }
-  onMount: (instance: Footnote) => void
+  id: string;
+  styleClass?: string;
+  source?: () => BlockStyle[];
+  onMount: (instance: Footnote) => void;
+  rowOptions?: RowOptions;
 }
 
 interface FootnoteState {
-  highlights: DecoratedBlock[]
+  highlights: BlockStyle[];
 }
 
 export class Footnote extends React.Component<FootnoteProps, FootnoteState>{
@@ -25,21 +23,16 @@ export class Footnote extends React.Component<FootnoteProps, FootnoteState>{
 
   componentDidMount() {
     if (this.props.source) {
-      this.addBatch(this.props.source.get());
-      if (this.props.source.poll){
-        setInterval(()=>{
-          this.addBatch(this.props.source.get());
-        }, this.props.source.interval);
-      }
+      this.addBatch(this.props.source());
     }
     this.props.onMount(this);
   }
 
-  addHighlight(h: DecoratedBlock) {
+  addHighlight(h: BlockStyle) {
     this.addBatch([h]);
   }
 
-  addBatch(hs: DecoratedBlock[]) {
+  addBatch(hs: BlockStyle[]) {
     let hlts = this.state.highlights.slice();
     for (let h of hs) {
       hlts.push(h);
@@ -47,17 +40,41 @@ export class Footnote extends React.Component<FootnoteProps, FootnoteState>{
     this.setState({ highlights: hlts });
   }
 
-  onHighlightClick(i: number, e: MouseEvent) {
-    debug(`${i} was clicked.`)
+  removeHighlight(id: string): boolean {
+    let hlts = this.state.highlights.slice();
+    let found = false;
+    for (let idx = 0; idx < hlts.length; idx++) {
+      let h = hlts[idx];
+      if (h.id == id) {
+        hlts.splice(idx, 1);
+        found = true;
+        this.setState({ highlights: hlts });
+        break;
+      }
+    }
+    return found;
+  }
+
+  removeAll(): BlockStyle[] {
+    let all = this.getAll();
+    this.setState({ highlights: [] });
+    return all;
+  }
+
+  getAll(): BlockStyle[]{
+    return this.state.highlights.slice();
   }
 
   render(): JSX.Element {
-    return <div id={this.props.id} >
+    return <div id={this.props.id} className={this.props.styleClass}>
       {this.state.highlights.map((blk, idx) =>
         <Item
           key={blk.id}
-          block={blk}
-          onClick={(e: MouseEvent) => this.onHighlightClick(idx, e)} />)}
+          id ={blk.id}
+          layouts={blk.RowLayouts}
+          containerClass={blk.ItemClass}
+          rowStyleClass = {blk.RowClass}
+          rowOptions= {this.props.rowOptions} />)}
     </div>;
   }
 }

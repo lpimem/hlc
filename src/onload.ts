@@ -1,13 +1,17 @@
-import { debug } from './util/log';
+import { debug } from 'logez';
 
 export function afterDocLoad(callback:EventListener){
   if (document){
     if (document.readyState == "loading"){
-      document.addEventListener("load", callback);
+      debug("document listener");
+      document.addEventListener("DOMContentLoaded", callback);
     } else {
+      debug("loaded, call directly");
       callback(null);
     }
   } else {
+    debug("window onload");
     window.addEventListener("load", callback);
+    window.onload = callback;
   }
 }

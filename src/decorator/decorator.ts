@@ -1,17 +1,41 @@
-import { DefaultColor, DefaultOpacity, DefaultZIndex } from '../constants';
-import { Dimension } from '../core/data';
-import {CSSProperties} from '@types/react';
+import { Block } from 'rangeblock';
+import { BlockStyle } from './block_style';
+import * as APP_CONSTS from "../app/consts";
 
-export interface Decorator { (dim: Dimension, styles: CSSProperties): void; }
+export interface BlockDecorator{
+  (block: Block): BlockStyle;
+}
 
-export function basicDecorator(dim: Dimension, styles: CSSProperties): void{
-  styles.position = "absolute";
-  styles.top = dim.Top;
-  styles.left = dim.Left;
-  styles.width = dim.Width;
-  styles.height = dim.Height;
-  styles.backgroundColor = DefaultColor();
-  styles.opacity = DefaultOpacity();
-  styles.zIndex = DefaultZIndex();
-  styles.pointerEvents = "none";
+export class BlockDecoratorFactory{
+
+  public addRowClass(className: string): BlockDecoratorFactory{
+    this.m_classes.push(className);
+    return this;
+  }
+
+  public addRowContainerClass(className: string): BlockDecoratorFactory{
+    this.m_item_classes.push(className);
+    return this;
+  }
+
+  public build(): BlockDecorator{
+    let classNames = this.m_classes.join(" ");
+    let itemClassNames = this.m_item_classes.join(" ");
+    return (block: Block)=>{return BlockStyle.make(block, classNames, itemClassNames);};
+  }
+
+  private m_classes: string[] = [];
+  private m_item_classes: string[] = [];
+}
+
+export class DefaultBlockDecoratorFactory extends BlockDecoratorFactory{
+  constructor(){
+    super();
+    super.addRowClass(APP_CONSTS.DefaultItemRowClass())
+         .addRowContainerClass(APP_CONSTS.DefaultFootnoteItemClass());
+  }
+}
+
+export function DefaultBlockDecorator(): BlockDecorator{
+  return new DefaultBlockDecoratorFactory().build();
 }
