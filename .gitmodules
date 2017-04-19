@@ -1,0 +1,3 @@
+[submodule "hlcproto"]
+	path = hlcproto
+	url = https://github.com/lpimem/hlcproto.git

@@ -4,4 +4,4 @@ node_js:
 before_script:
   - npm install -g webpack
 script:
-  - webpack --config webpack.inject.config.js
+  - webpack

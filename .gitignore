@@ -38,3 +38,7 @@ jspm_packages
 
 # build 
 dist
+
+# chrome build
+chrome-dist
+*.crx

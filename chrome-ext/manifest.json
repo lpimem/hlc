@@ -1,0 +1,40 @@
+﻿{
+    "manifest_version": 2,
+
+    "name": "HLC",
+    "description": "Make notes and marks on your web page.",
+    "version": "1.0.0",
+
+    "permissions": [
+        "activeTab",
+        "storage",
+        "http://localhost:23333/",
+        "https://hlc.thehardmode.com/"
+    ],
+
+    "background": {
+        "scripts": ["bg.js"]
+    },
+
+    "browser_action": {
+        "default_icon": "icon/pen-50.png",
+        "default_popup": "popup.html"
+    },
+
+    "externally_connectable": {
+        "matches": [
+            "http://localhost:23333/*",
+            "https://hlc.thehardmode.com/*"
+        ]
+    },
+
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "css": [],
+        "js": [
+            "hlc.content.js"
+        ]
+    }],
+
+    "content_security_policy": "script-src 'self' https://apis.google.com/; object-src 'self'"
+}
