@@ -26,6 +26,15 @@ You can try the test version in [release page](https://github.com/lpimem/hlc/rel
 
 Please find the detailed guide in [How to use](https://github.com/lpimem/hlc/blob/master/How-To-Use.MD).
 
+## To contribute or play with the code 
+
+```
+git clone https://github.com/lpimem/hlc
+cd hlc && npm install 
+```
+
+You may need to install [Node.js](https://nodejs.org/en/download/) first.
+
 ## Preview Screenshots
 
 ### On news site
@@ -45,7 +54,3 @@ Please find the detailed guide in [How to use](https://github.com/lpimem/hlc/blo
 ## Credit
 
 Logo icon is created by [OpenClipart-Vectors](https://pixabay.com/en/users/OpenClipart-Vectors-30363/)
-
-## About me
-
-I'm a MS student from University of Memphis. If you are interested in hiring me, please find my CV [here](https://www.dropbox.com/s/xxpulpqeenki1f0/LeiPi_grad_ms_cs_v2.pdf?dl=0). 

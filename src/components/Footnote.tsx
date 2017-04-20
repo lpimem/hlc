@@ -36,6 +36,7 @@ export class Footnote extends React.Component<FootnoteProps, FootnoteState>{
     let hlts = this.state.highlights.slice();
     for (let h of hs) {
       hlts.push(h);
+      debug(`adding highlight ${h.id}`);
     }
     this.setState({ highlights: hlts });
   }
