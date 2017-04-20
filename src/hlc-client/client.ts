@@ -5,6 +5,7 @@ import {LocalAppUi} from '../app/app';
 import {IApp, IAppOptions, IBlockConfig} from '../app/app_define';
 import {ItemCtxMenuOptions} from '../app/ctx_menu';
 import * as MSG from '../compiled/proto.js';
+import { getGlobalBlockMap } from "../app/block_map";
 
 
 export interface ServerAPI {
@@ -45,8 +46,8 @@ export class Client implements IApp {
     return true;
   }
 
-  removeHighlight(blockId: string): void {
-    this.delete(blockId);
+  removeHighlight(blockId: string): boolean {
+    return this.delete(blockId);
   }
 
   generateMarkdownNotes(): string {
@@ -88,19 +89,25 @@ export class Client implements IApp {
         });
   }
 
-  delete(blk: Block|string) {
+  delete(blk: Block|string): boolean{
     let id: string;
+    let deleted: boolean = false;
     if (blk instanceof Block) {
       id = blk.id;
     } else {
       id = blk;
     }
-    this.m_app.removeHighlight(id);
-    this.m_api.delete(new MSG.hlcmsg.IdList({arr: [Number(id)]}), (list) => {
+    let block:Block = getGlobalBlockMap().getBlock(id);
+    deleted = this.m_app.removeHighlight(block.id);
+    if (!deleted){
+      deleted = this.m_app.removeHighlight(id);
+    }
+    this.m_api.delete(new MSG.hlcmsg.IdList({arr: [Number(block.id)]}), (list) => {
       if (list && list.arr) {
         debug(`removed ${list.arr.join()}`);
       }
     });
+    return deleted;
   }
 
   private itemCtxMenuOptions(): ItemCtxMenuOptions {

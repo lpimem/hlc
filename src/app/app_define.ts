@@ -10,8 +10,9 @@ export interface IApp{
 
   /**
    * remove a highlighted block with given id
+   * @return true if delete succeed.
    */
-  removeHighlight(blockId: string): void;
+  removeHighlight(blockId: string): boolean;
 
   /** 
    * return highlighted text of block
