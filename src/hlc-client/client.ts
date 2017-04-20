@@ -5,6 +5,7 @@ import {LocalAppUi} from '../app/app';
 import {IApp, IAppOptions, IBlockConfig} from '../app/app_define';
 import {ItemCtxMenuOptions} from '../app/ctx_menu';
 import * as MSG from '../compiled/proto.js';
+import { getGlobalBlockMap } from "../app/block_map";
 
 
 export interface ServerAPI {
@@ -39,14 +40,17 @@ export class Client implements IApp {
       return false;
     }
     this.m_app.addBlock(block, config);
-    this.saveBlock(block, (blk: Block) => {
+    this.saveBlock(block, (blk: Block, newId:string) => {
+      this.m_app.removeHighlight(blk.id);
+      blk.setId(newId);
+      this.m_app.addBlock(blk, config);
       debug(`adding block: ${JSON.stringify(blk)}`);
     }, config);
     return true;
   }
 
-  removeHighlight(blockId: string): void {
-    this.delete(blockId);
+  removeHighlight(blockId: string): boolean {
+    return this.delete(blockId);
   }
 
   generateMarkdownNotes(): string {
@@ -88,19 +92,21 @@ export class Client implements IApp {
         });
   }
 
-  delete(blk: Block|string) {
+  delete(blk: Block|string): boolean{
     let id: string;
+    let deleted: boolean = false;
     if (blk instanceof Block) {
       id = blk.id;
     } else {
       id = blk;
     }
-    this.m_app.removeHighlight(id);
+    deleted = this.m_app.removeHighlight(id);
     this.m_api.delete(new MSG.hlcmsg.IdList({arr: [Number(id)]}), (list) => {
       if (list && list.arr) {
         debug(`removed ${list.arr.join()}`);
       }
     });
+    return deleted;
   }
 
   private itemCtxMenuOptions(): ItemCtxMenuOptions {
@@ -115,7 +121,7 @@ export class Client implements IApp {
   }
 
   private saveBlock(
-      block: Block, onSave: (blk: Block) => void, renderCfg?: IBlockConfig) {
+      block: Block, onSave: (blk: Block, newId:string) => void, renderCfg?: IBlockConfig) {
     let n = new MSG.hlcmsg.Pagenote();
     n.uid = this.m_uid;
     n.pageid = this.m_pid;
@@ -124,8 +130,7 @@ export class Client implements IApp {
     debug('saving block with option: ' + renderOption);
     n.highlights.push(metaToMsg(block.rangeMeta, renderOption));
     this.m_api.save(n, (savedIdList) => {
-      block.setId(savedIdList.arr[0].toString());
-      onSave(block);
+      onSave(block, savedIdList.arr[0].toString());
     });
   }
 

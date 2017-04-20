@@ -86,15 +86,16 @@ export class LocalAppUi implements IApp {
    * Find and remove the block with a given id.
    * @param id of the block to remove
    */
-  public removeHighlight(id: string): void {
+  public removeHighlight(id: string): boolean {
     for (let ftId in this.m_ftnotes) {
       let note = this.m_ftnotes[ftId];
       if (note.removeHighlight(id)) {
         this.m_layout_snapshots.remove(id);
-        return;
+        return true;
       }
     }
     warn(`removeHighlight: ${id} not found in any footnotes`);
+    return false;
   }
 
   /**
