@@ -16,11 +16,13 @@ A free open-source web-page annotation plug-in. This project is built upon [rang
 - [x] Google Sign-In
 - [ ] More test and bug fix
 
-## Download
+## Install
 
-There isn't any stable release yet. 
+A test version is published in [Chrome Web Store](https://chrome.google.com/webstore/detail/hlc/bmjibjpfhjbmiflkbblpfohdndhlaekg). 
 
-You can try the test version in [release page](https://github.com/lpimem/hlc/releases). 
+Currently only members of our [test group](https://groups.google.com/forum/#!forum/hlc-better-web) can install it.
+
+Everyone can join this group. 
 
 ## Usage 
 
