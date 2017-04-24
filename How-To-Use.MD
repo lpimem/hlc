@@ -1,4 +1,4 @@
-## 1. Log in to enable the extension
+## 1. Login to enable the extension
 
 You will need to log in with your google account. As this is a chrome extension, 
 most likely you are already logged in, then just click the 'Log in' button.
