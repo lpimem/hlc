@@ -52,17 +52,15 @@ export function getAllDecoratorNames(){
 }
 
 function buildDecorators() {
-  decorators["PaleYellow"] = 
-    new DefaultBlockDecoratorFactory()
-    .addRowClass("hlcir_pale_yellow").build();
-
-  decorators["Purple"] = 
-    new DefaultBlockDecoratorFactory()
-    .addRowClass("hlcir_purple").build();
-
-  decorators["RedHollowGlow"] = 
-    new DefaultBlockDecoratorFactory()
-    .addRowClass("hlcir_red_glow_hollow").build();
+  for (let i in Option){
+    if (Number(i) > 0){
+      let name = Option[i];
+      decorators[name] = 
+        new DefaultBlockDecoratorFactory()
+            .addRowClass(getCssClassName(name))
+            .build();
+    }
+  }
 }
 
 buildDecorators();

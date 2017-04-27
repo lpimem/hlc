@@ -15,7 +15,7 @@ function logout(onSuc: ()=>void){
   popup.logout(onSuc);
 }
 
-function checkLogin(onLoggedIn:(uid:number, token:string)=>void,
+function checkLogin(onLoggedIn:()=>void,
     onLoggedOut:()=>void){
   popup.checkLoggedIn(onLoggedIn, onLoggedOut);
 }
@@ -36,7 +36,7 @@ function configs(): [string, string][]{
 }
 
 function changeCfg(opt: string, onSuc:(option:string)=>{}){
-  popup.changeCSConfig(opt, onSuc);
+  popup.changeCSConfig(opt, onSuc, (reason:string)=>{ logger.error(`Cannot change config: ${reason}`); });
 }
 
   window.requestAnimationFrame(()=>{

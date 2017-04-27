@@ -2,7 +2,7 @@ import {debug, error} from 'logez';
 import {Block, extractSelectedBlock, RangeMeta} from 'rangeblock';
 
 import {LocalAppUi} from '../app/app';
-import {IApp, IAppOptions, IBlockConfig} from '../app/app_define';
+import {IApp, IBlockConfig} from '../app/app_define';
 import {ItemCtxMenuOptions} from '../app/ctx_menu';
 import * as MSG from '../compiled/proto.js';
 import { getGlobalBlockMap } from "../app/block_map";
@@ -23,8 +23,7 @@ export class Client implements IApp {
   constructor(uid: number, doc: Document, api: ServerAPI) {
     this.m_uid = uid;
     this.m_api = api;
-    this.m_app = new LocalAppUi(doc);
-    this.m_app.configure({itemCtxMenuOptions: this.itemCtxMenuOptions()});
+    this.m_app = new LocalAppUi(doc, {itemCtxMenuOptions: this.itemCtxMenuOptions()});
     this.m_doc = doc;
     this.reload();
   }
@@ -34,23 +33,42 @@ export class Client implements IApp {
    * Else do nothing.
    * @return if there is a selected block.
    */
-  highlightSelection(config: IBlockConfig): boolean {
+  highlightSelection(renderOption?: IBlockConfig, 
+                     onSuccess?: (block: Block)=>void,
+                     onFail?:(reason: string)=>void): void {
     let block: Block = extractSelectedBlock(window, document);
     if (block == null) {
-      return false;
+      onFail && onFail("no selected text");
     }
-    this.m_app.addBlock(block, config);
+    this.m_app.addBlock(block, renderOption);
     this.saveBlock(block, (blk: Block, newId:string) => {
       this.m_app.removeHighlight(blk.id);
       blk.setId(newId);
-      this.m_app.addBlock(blk, config);
+      this.m_app.addBlock(blk, renderOption);
       debug(`adding block: ${JSON.stringify(blk)}`);
-    }, config);
-    return true;
+      onSuccess && onSuccess(blk);
+    }, renderOption);
   }
 
-  removeHighlight(blockId: string): boolean {
-    return this.delete(blockId);
+  removeHighlight(id: string, 
+                  onSuccess?:(blockId: string)=>void, 
+                  onFail?: (blockId: string, reason: string)=>void): void{
+    
+    let block:Block = getGlobalBlockMap().getBlock(id);
+    let onDelete = (blockId: string) => {
+        this.m_api.delete(
+          new MSG.hlcmsg.IdList({arr: [Number(block.id)]}), 
+          (list) => {
+            if (list && list.arr) {
+              debug(`removed ${list.arr.join()}`);
+            }
+          });
+    };
+    this.m_app.removeHighlight(id, 
+                              onDelete,
+                              (blockId: string, reason)=>{
+                                this.m_app.removeHighlight(block.id, onDelete);
+                              });
   }
 
   generateMarkdownNotes(): string {
@@ -63,10 +81,6 @@ export class Client implements IApp {
 
   copy(blockId: string): boolean {
     return this.m_app.copy(blockId);
-  }
-
-  public configure(options: IAppOptions) {
-    this.m_app.configure(options);
   }
 
   reload() {
@@ -90,23 +104,6 @@ export class Client implements IApp {
             }
           }
         });
-  }
-
-  delete(blk: Block|string): boolean{
-    let id: string;
-    let deleted: boolean = false;
-    if (blk instanceof Block) {
-      id = blk.id;
-    } else {
-      id = blk;
-    }
-    deleted = this.m_app.removeHighlight(id);
-    this.m_api.delete(new MSG.hlcmsg.IdList({arr: [Number(id)]}), (list) => {
-      if (list && list.arr) {
-        debug(`removed ${list.arr.join()}`);
-      }
-    });
-    return deleted;
   }
 
   private itemCtxMenuOptions(): ItemCtxMenuOptions {

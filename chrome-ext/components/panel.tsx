@@ -6,7 +6,7 @@ import * as React from "react";
 
 export interface PanelProps {
   isLoggedIn: (
-    onLoggedIn: (uid:number, token:string) => void,
+    onLoggedIn: () => void,
     onLoggedOut: () => void) => void;
   logIn: (onSuc: (profile: any) => void, onFail: (msg: string) => void) => void;
   logout: (onSuc: () => void) => void;
@@ -38,20 +38,26 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
     };
   }
 
+  private updateCfgsState(active: string){
+    let cfgs = this.state.configs;
+    if (cfgs.length < 1) {
+      cfgs = this.generateConfigs(active);
+    }
+    this.setState({
+      loggedIn: true,
+      name: this.props.profile().name,
+      configs: cfgs,
+      msg: ""
+    } as PanelState);
+  }
+
   componentDidMount() {
     this.props.isLoggedIn(
-      (uid, token) => {
+      () => {
         popup.queryCurrentConfig((resp:string)=>{
-          let cfgs = this.state.configs;
-          if (cfgs.length < 1) {
-            cfgs = this.generateConfigs(resp);
-          }
-          this.setState({
-            loggedIn: true,
-            name: this.props.profile().name,
-            configs: cfgs,
-            msg: ""
-          } as PanelState);
+          this.updateCfgsState(resp);
+        }, (error: string)=>{
+          this.updateCfgsState(null);
         });
       },
       () => {

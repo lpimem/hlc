@@ -3,22 +3,16 @@ import {HLC_SERVICE_BASE} from "../../src/conf";
 
 let $ = document.getElementById.bind(document);
 
-let HLC_UID: number = null;
-let HLC_TOKEN: string = null;
 
-export function checkLoggedIn(onLogin: (uid: number, token: string) => void, onFail: () => void) {
-  chrome.storage.local.get(["hlc_uid", "hlc_token"], (data) => {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError.message);
+export function checkLoggedIn(onLogin: () => void, onFail: () => void) {
+  chrome.runtime.sendMessage({
+    queryLogin: true
+  }, (resp:boolean)=>{
+    if (chrome.runtime.lastError || !resp){
+      console.error(chrome.runtime.lastError);
       onFail();
     } else {
-      if (data["hlc_uid"] && data["hlc_token"]) {
-        HLC_UID = data["hlc_uid"];
-        HLC_TOKEN = data["hlc_token"];
-        onLogin(data["hlc_uid"], data["hlc_token"]);
-      } else {
-        onFail();
-      }
+      onLogin();
     }
   });
 }
@@ -47,15 +41,24 @@ function calculateCenterCoord(w: number, h: number): [number, number] {
 }
 
 export function logout(onLogout: () => void) {
-  chrome.storage.local.clear(onLogout);
+  chrome.runtime.sendMessage({
+    doLogout: true
+  }, (resp:boolean)=>{
+    if (chrome.runtime.lastError || !resp){
+      return;
+    } else {
+      onLogout();
+    }
+  });
 }
 
-function queryActiveTab(request: MsgDefine.CSMessage<any>, onSuccess:(resp:any)=>void){
+function queryActiveTab(request: MsgDefine.CSMessage<any>, onSuccess:(resp:any)=>void, onFail: (reason: string)=>void){
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     console.debug("sending message to ", tabs[0].id);
     chrome.tabs.sendMessage(tabs[0].id, request, (resp) => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
+        onFail(chrome.runtime.lastError.message);
       } else {
         onSuccess(resp);
       }
@@ -63,15 +66,14 @@ function queryActiveTab(request: MsgDefine.CSMessage<any>, onSuccess:(resp:any)=
   });
 }
 
-export function queryCurrentConfig(onSuc: (option: string) => void){
+export function queryCurrentConfig(onSuc: (option: string) => void, onFail: (reason: string)=>void){
   let request = new MsgDefine.QueryCurrentConfig();
-  queryActiveTab(request, onSuc);
+  queryActiveTab(request, onSuc, onFail);
 }
 
-export function changeCSConfig(
-  option: string,
-  onSuc: (option: string) => void
-) {
+export function changeCSConfig(option: string,
+                               onSuc: (option: string) => void,
+                               onFail: (reason: string)=>void) {
   let request = new MsgDefine.ChangeBlockConfig(option);
-  queryActiveTab(request, onSuc);
+  queryActiveTab(request, onSuc, onFail);
 }

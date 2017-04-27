@@ -1,47 +1,44 @@
+import { Block } from 'rangeblock';
 import { BlockDecorator } from '../decorator/decorator';
-export interface IApp{
 
+export interface IApp{
   /**
    * If user selected some text in the current window, highlight it.
    * Else do nothing.
-   * @return if there is a selected block
+   * @param renderOption: instructions on how the highlights should be rendered
+   * @param onSuccess: [optional] callback upon successful highlight
+   * @param onFail: [optional] callback when no highlight is generated
    */
-  highlightSelection(option?: IBlockConfig): boolean;
+  highlightSelection(renderOption?: IBlockConfig, 
+                     onSuccess?: (block: Block)=>void,
+                     onFail?:(reason: string)=>void): void;
 
   /**
    * remove a highlighted block with given id
-   * @return true if delete succeed.
+   * @param blockId: ID of the block to remove from the app
+   * @param onSuccess: [optional] callback upon successful delete
+   * @param onFail: [optional] callback upon failed delete
    */
-  removeHighlight(blockId: string): boolean;
+  removeHighlight(blockId: string, 
+                  onSuccess?:(blockId: string)=>void, 
+                  onFail?: (blockId: string, reason: string)=>void): void;
 
   /** 
-   * return highlighted text of block
+   * @return the text content of a block
    */
   getText(blockId: string): string;
 
   /**
-   * copy content of a block to clipboard
-   * return success or not.
+   * Copy content of a block to clipboard
+   * Requires browser support.
+   * @return success or not.
    */
   copy(blockId: string): boolean ;
 
   /**
-   * generate notes of highlighted text
+   * Generate notes of highlighted text in markdown format.
    */
   generateMarkdownNotes(): string;
-
-  /**
-   * Setup app according to options
-   */
-  configure(options: IAppOptions): void ;
-}
-
-export interface IAppOptions{
-
-  /**
-   * Defines the styles of the highlights
-   */
-  blockDecorator: BlockDecorator;
 }
 
 export interface IBlockConfig{
