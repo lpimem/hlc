@@ -1,4 +1,4 @@
-import { IApp, IAppOptions } from './app/app_define';
+import { IApp } from './app/app_define';
 import { Client } from './hlc-client/client';
 import { addRequestListeners } from './hlc-client/customize';
 import * as auth from './hlc-client/auth';
@@ -36,7 +36,6 @@ function init(doc: Document) {
 function createApp(doc: Document, uid:number, token: string){
   let api = new HlcSrvAPI(doc.defaultView, `${HLC_SERVICE_BASE}`, token);
   let app: IApp = new Client(uid, doc, api);
-  app.configure(uiOptions());
   MsgBox.init();
   addEventListeners(doc, app);
   addShortcuts(app);
@@ -44,12 +43,6 @@ function createApp(doc: Document, uid:number, token: string){
   MsgClient.start();
   patchStyle(doc);
   logez.info("hlc inited.");
-}
-
-function uiOptions(): IAppOptions{
-  return {
-    blockDecorator: DefaultBlockDecorator()
-  };
 }
 
 function patchStyle(doc: Document){
@@ -66,14 +59,20 @@ function addEventListeners(doc: Document, app: IApp) {
   });
 }
 
+function quickHighlightOrSwitchMode(app: IApp): void{
+  let cfg = config.getBlockRenderConfig();
+  if (!config.isEnabled()){
+    app.highlightSelection(cfg, null, ()=>{
+      config.toggleEnabled();
+    });
+  } else {
+    config.toggleEnabled();
+  }
+}
+
 function addShortcuts(app: IApp) {
   jskbd.setShortcut([jskbd.ALT_LEFT], "KeyV", () => {
-    if (!config.isEnabled() && app.highlightSelection()) {
-      return;
-    } else {
-      let enabled = config.toggleEnabled();
-      logez.debug(`Highlighter enabled: ${enabled}`);
-    }
+    quickHighlightOrSwitchMode(app);
   });
 
   jskbd.setShortcut([jskbd.CTRL_LEFT], "KeyG", () => {

@@ -1,29 +1,30 @@
+import { BlockDecorator, BlockDecoratorFactory } from '../decorator/decorator';
+import { info } from 'rangeblock/dist/util/log';
 import { Footnote } from '../components/Footnote';
 import { BlockStyle } from '../decorator/block_style';
-import { BlockDecorator } from '../decorator/decorator';
-import * as decoratorDefine from '../decorator/decorator';
 import { MutationSummary, Summary } from '../util/mutation-summary';
 import { IApp, IBlockConfig } from './app_define';
 import { getGlobalBlockMap } from './block_map';
 import * as APP_CONSTS from './consts';
-import * as decorators from "./decorators";
 import { ItemCtxMenu, ItemCtxMenuOptions } from './ctx_menu';
+import * as DefinedDecorators from './decorators';
 import * as Markdown from 'hlc-js-helpers';
-import { clearSelection, getNodeByPath, select } from 'hlc-js-helpers';
-import { debug, warn } from 'logez';
+import { clearSelection, getNodeByPath, select, getSelectedRange} from 'hlc-js-helpers';
+import { debug } from 'logez';
 import { Block, extractSelectedBlock, RangeMeta, restoreBlock } from 'rangeblock';
 import * as rangeblock from 'rangeblock';
-import { Dimension } from 'rangeblock/dist';
+import { Dimension } from 'rangeblock';
+import { RangeCache } from "rangeblock";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as MouseEvtUtil from "../util/mouse_evt";
 
 interface FootnoteDict {
   [key: string]: Footnote;
 }
 
 export interface LocalAppUiOptions {
-  blockDecorator?: decoratorDefine.BlockDecorator;
-  itemCtxMenuOptions?: ItemCtxMenuOptions;
+  itemCtxMenuOptions: ItemCtxMenuOptions;
 }
 
 /**
@@ -38,28 +39,25 @@ export class LocalAppUi implements IApp {
     this.init_options(options);
     this.m_layout_snapshots = new LayoutSnapshots(doc);
     this.observeResize();
-  }
-
-  public configure(options: LocalAppUiOptions){
-    if (options.blockDecorator){
-      this.m_blockDecorator = options.blockDecorator;
-    } 
-    if (options.itemCtxMenuOptions){
-      this.m_ctx_menu.configure(options.itemCtxMenuOptions);
-    }
+    this.observeMouseDown();
   }
 
   /**
    * If user selected some text in the current window, highlight it.
    * Else do nothing.
+   * @param renderOption: instructions on how the highlights should be rendered
+   * @param onSuccess: [optional] callback upon successful highlight
+   * @param onFail: [optional] callback when no highlight is generated
    */
-  public highlightSelection(config?: IBlockConfig): boolean {
+  public highlightSelection(renderOption?: IBlockConfig,
+                            onSuccess?: (block: Block)=>void,
+                            onFail?:(reason: string)=>void): void {
     let block: Block = extractSelectedBlock(window, document);
-    if (block == null) {
-      return false;
+    if (!block) {
+      onFail && onFail("no selected text found");
     }
-    this.addBlock(block, config);
-    return true;
+    this.addBlock(block, renderOption);
+    onSuccess && onSuccess(block);
   }
 
   /**
@@ -74,28 +72,25 @@ export class LocalAppUi implements IApp {
     return block.id;
   }
 
-  public getDecorator(config?: IBlockConfig){
-    let decorator = this.m_blockDecorator;
-    if (config && config.decoratorName){
-      decorator = decorators.getDecorator(config.decoratorName);
-    }
-    return decorator;
-  }
-
   /**
-   * Find and remove the block with a given id.
-   * @param id of the block to remove
+   * remove a highlighted block with given id
+   * @param blockId: ID of the block to remove from the app
+   * @param onSuccess: [optional] callback upon successful delete
+   * @param onFail: [optional] callback upon failed delete
    */
-  public removeHighlight(id: string): boolean {
+  public removeHighlight(blockId: string,
+                         onSuccess? :(blockId: string)=>void,
+                         onFail? : (blockId: string, reason: string)=>void): void {
     for (let ftId in this.m_ftnotes) {
       let note = this.m_ftnotes[ftId];
-      if (note.removeHighlight(id)) {
-        this.m_layout_snapshots.remove(id);
-        return true;
+      if (note.removeHighlight(blockId)) {
+        this.m_layout_snapshots.remove(blockId);
+        onSuccess && onSuccess(blockId);
       }
     }
-    warn(`removeHighlight: ${id} not found in any footnotes`);
-    return false;
+    let reason : string = `${blockId} not found in any footnotes`;
+    debug(`removeHighlight: ${reason}`);
+    onFail && onFail(blockId, reason);
   }
 
   /**
@@ -132,11 +127,11 @@ export class LocalAppUi implements IApp {
    * inside a footnote. Footnote is located by the block's 
    * position anchor. A new footnote is created if not found. 
    * @param blk a Block instance
-   * @param config [optional] config for rendering the block.
+   * @param renderOption [optional] instructions on how to render the block.
    */
-  public addBlock(blk: Block, config?: IBlockConfig): void {
+  public addBlock(blk: Block, renderOption: IBlockConfig): void {
     let ftntId = blk.rangeCache.meta.anchorUPath;
-    let decorator = this.getDecorator(config);
+    let decorator = DefinedDecorators.getDecorator(renderOption.decoratorName);
     let blkStyle = decorator(blk);
     if (ftntId in this.m_ftnotes) {
       let ftnt: Footnote = this.m_ftnotes[ftntId];
@@ -230,7 +225,8 @@ export class LocalAppUi implements IApp {
         },
       }
     });
-    debug("generated under", container);
+    debug("putting footnotes under", container);
+    ReactDOM.unmountComponentAtNode(container);
     ReactDOM.render(ftntEl, container);
     return anchor;
   }
@@ -238,13 +234,57 @@ export class LocalAppUi implements IApp {
   private init_options(options?: LocalAppUiOptions){
     let itemCtxMenuOptions = null;
     if (options){
-      this.m_blockDecorator = options.blockDecorator;
       itemCtxMenuOptions = options.itemCtxMenuOptions;
-    } else {
-      this.m_blockDecorator = decoratorDefine.DefaultBlockDecorator();
     }
     this.m_ctx_menu = new ItemCtxMenu(
       this.m_doc, this.m_doc.body, itemCtxMenuOptions);
+  }
+
+  private getSelectedRangeCache(): RangeCache {
+    let r = getSelectedRange(this.m_win);
+    if (r && !r.collapsed){
+      return RangeCache.make(this.m_doc, r);
+    }
+    return null;
+  }
+
+  private m_delayedMouseDownEvtName: string;
+  private m_delayedMouseUpEvtHandler: any;
+  private onmouseup(evt: MouseEvent): void{
+    this.m_doc.body.removeEventListener("mouseup", this.m_delayedMouseUpEvtHandler);
+    if(evt.button != 0){
+      return;
+    }
+    let mustRedraw = true;
+    let recalculateDims = false;
+    let decoratorFactory = new BlockDecoratorFactory();
+    decoratorFactory.removeRowClass(APP_CONSTS.NoPointerEventsClass());
+    this.redrawAll(decoratorFactory, mustRedraw, recalculateDims);
+  }
+
+  private observeMouseDown(){
+    let target = this.m_doc.body;
+    this.m_delayedMouseDownEvtName = MouseEvtUtil.monitorDelayedMouseDownEvent(target, 100);
+    target.addEventListener(this.m_delayedMouseDownEvtName, (evt)=>{
+      this.m_delayedMouseUpEvtHandler = this.onmouseup.bind(this);
+      target.addEventListener("mouseup", this.m_delayedMouseUpEvtHandler);
+      let decoratorFactory = new BlockDecoratorFactory();
+      decoratorFactory.addRowClass(APP_CONSTS.NoPointerEventsClass());
+      let mustRedraw = true;
+      let recalculateDims = false;
+      this.redrawAll(decoratorFactory, mustRedraw, recalculateDims);
+    });
+  }
+
+  private redrawAll(template?: BlockDecoratorFactory, force?:boolean, recalculateDim:boolean = true){
+    for (let fid in this.m_ftnotes){
+      let anchor = getNodeByPath(this.m_doc, fid) as HTMLElement;
+      if (force || this.m_layout_snapshots.isChanged(fid, anchor, this.m_doc.body)){
+        this.redrawFootnote(fid, template, force, recalculateDim);
+      } else {
+        debug(`{fid} didn't change.`);
+      }
+    }
   }
 
   private observeResize(){
@@ -256,15 +296,10 @@ export class LocalAppUi implements IApp {
       }
       setTimeout(()=>{
         debug('on document resize');
-        for (let fid in this.m_ftnotes){
-        let anchor = getNodeByPath(this.m_doc, fid) as HTMLElement;
-        if (this.m_layout_snapshots.isChanged(fid, anchor, this.m_doc.body)){
-          this.redrawFootnote(fid);
-        } else {
-          debug(`{fid} didn't change.`);
-        }
-      }}, 50);
+        this.redrawAll();
+      }, 50);
     });
+    info("observing resizing events");
   }
 
   private observeFootnotedSubtree(anchor: HTMLElement, footnoteId: string){
@@ -286,28 +321,45 @@ export class LocalAppUi implements IApp {
     this.m_observers[footnoteId] = ob;
   }
 
-  private redrawFootnote(footnoteId:string){
+  private redrawFootnote(footnoteId:string, decoratorFactory?: BlockDecoratorFactory, force?:boolean, recalculateDim:boolean = true) {
     let ftnt = this.m_ftnotes[footnoteId];
-    if (!ftnt){
+    if (!ftnt)
+    {
       debug("redrawFootnote: cannot find footnote: " + footnoteId);
       return ;
     }
     let old = ftnt.getAll();
-    let newStyles = this.recomputeStyles(old);
-    // this.renderFootnote(footnoteId, newStyles);
-    this.m_win.requestAnimationFrame(()=>{
-      ftnt.removeAll();
-      ftnt.addBatch(newStyles);
-    });
+    let newStyles = this.recomputeStyles(old, decoratorFactory, recalculateDim);
+    if (force)
+    {
+      this.renderFootnote(footnoteId, newStyles);
+    }
+    else
+    {
+      this.m_win.requestAnimationFrame(()=>{
+        debug(`re-rendering footnote ${footnoteId}`);
+        this.renderFootnote(footnoteId, newStyles);
+      });
+    }
   }
 
-  private recomputeStyles(old: BlockStyle[]): BlockStyle[]{
+  private recomputeStyles(old: BlockStyle[], template?: BlockDecoratorFactory, recalculateDim:boolean = true): BlockStyle[]{
     let result: BlockStyle[] = [];
+    if (!template){
+      template = new BlockDecoratorFactory();
+    }
     for (let one of old){
       let block = this.m_blockMap.getBlock(one.id);
-      block.recalculateDimension();
-      let style = this.m_blockDecorator(block);
-      style = BlockStyle.make(block, one.RowClass, one.ItemClass);
+      if ( recalculateDim )
+      {
+        block.recalculateDimension();
+      }
+      let style : BlockStyle;
+      let decorate = template.clone()
+                             .insertRowClass(one.RowClass)
+                             .insertRowContainerClass(one.ItemClass)
+                             .build();
+      style = decorate(block);
       result.push(style);
     }
     return result;
@@ -315,7 +367,6 @@ export class LocalAppUi implements IApp {
 
   private m_ftnotes: FootnoteDict;
   private m_blockMap = getGlobalBlockMap();
-  private m_blockDecorator: decoratorDefine.BlockDecorator;
   private m_ctx_menu: ItemCtxMenu;
   private m_row_options: any;
   private m_observers: {[key:string]: MutationSummary} = {};

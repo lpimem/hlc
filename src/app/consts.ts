@@ -10,6 +10,10 @@ export function DefaultFootnoteItemClass () : string{
   return "hlc_row_container";
 }
 
+export function NoPointerEventsClass () : string{
+  return "hlc_row_ignore_pointer_events";
+}
+
 export function DefaultItemRowClass () : string{
   return "hlc_row";
 }

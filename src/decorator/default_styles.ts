@@ -11,6 +11,10 @@ export function addDefaultStyles(doc: Document){
   border: 0;
 }
 
+.${CONSTS.NoPointerEventsClass()}{
+  pointer-events: none;
+}
+
 .${CONSTS.DefaultItemRowClass()} {
   background-color: ${CONSTS.DefaultColor()};
   opacity: ${CONSTS.DefaultOpacity()};
