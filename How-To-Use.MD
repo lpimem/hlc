@@ -3,8 +3,6 @@
 You will need to log in with your google account. As this is a chrome extension, 
 most likely you are already logged in, then just click the 'Log in' button.
 
-_Make sure to refresh the opened page after logging in._
-
 The extension will only use your Google ID as an identifier to store your notes. 
 It will not have any permission to access your data on google. 
 
