@@ -20,9 +20,7 @@ A free open-source web-page annotation plug-in. This project is built upon [rang
 
 A test version is published in [Chrome Web Store](https://chrome.google.com/webstore/detail/hlc/bmjibjpfhjbmiflkbblpfohdndhlaekg). 
 
-Currently only members of our [test group](https://groups.google.com/forum/#!forum/hlc-better-web) can install it.
-
-Everyone can join this group. 
+Join our [discuss group](https://groups.google.com/forum/#!forum/hlc-better-web) to subscribe updates and notices.
 
 ## Usage 
 
