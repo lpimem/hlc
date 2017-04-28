@@ -3,7 +3,7 @@
 
     "name": "HLC",
     "description": "Make notes and marks on your web page.",
-    "version": "0.0.0.2",
+    "version": "0.0.0.3",
 
     "permissions": [
         "activeTab",

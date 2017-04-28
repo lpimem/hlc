@@ -1,4 +1,4 @@
-# Logs
+
 logs
 *.log
 npm-debug.log*
@@ -42,3 +42,4 @@ dist
 # chrome build
 chrome-dist
 *.crx
+*.zip

@@ -21,7 +21,7 @@
     "@types/react": "^15.0.16",
     "@types/react-dom": "^0.14.23",
     "hlc-js-helpers": "^1.0.0",
-    "js-ctx-menu": "^1.1.0",
+    "js-ctx-menu": "^1.1.2",
     "jskbd": "1.x",
     "protobufjs": "^6.7.1",
     "rangeblock": "^1.0.0",
