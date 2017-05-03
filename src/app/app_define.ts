@@ -42,5 +42,6 @@ export interface IApp{
 }
 
 export interface IBlockConfig{
-  decoratorName: string;
+  decoratorName?: string;
+  decorator? : BlockDecorator;
 }

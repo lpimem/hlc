@@ -9,24 +9,24 @@ import { afterDocLoad } from './onload';
 import {HLC_SERVICE_BASE, LOG_LEVEL} from './conf';
 import * as config from "./global/configure";
 import * as MsgClient from "./message/cs-client";
-import * as logez from 'logez';
+import * as logger from 'logez';
 import * as MsgBox from './util/msgbox';
 import * as ctxMenu from 'js-ctx-menu/dist';
 import * as jskbd from 'jskbd';
 
-logez.setLogLevel(LOG_LEVEL);
+logger.setLogLevel(LOG_LEVEL);
 
 function isEnabled() {
   return config.isEnabled() && !MsgBox.isOpen();
 }
 
 function init(doc: Document) {
-  logez.info("- - - - H L C - - - -");
+  logger.info("- - - - H L C - - - -");
   auth.login((uid, token)=>{
-    logez.info("logged in. ");
+    logger.info("logged in. ");
     createApp(doc, uid, token);
   }, ()=>{
-    logez.error("cannot login hlc service");
+    logger.error("cannot login hlc service");
     auth.monitorLocalChange(()=>{
       createApp(doc, HlcSrvAPI.getUID(), HlcSrvAPI.getToken());
     });
@@ -42,7 +42,7 @@ function createApp(doc: Document, uid:number, token: string){
   addRequestListeners(app);
   MsgClient.start();
   patchStyle(doc);
-  logez.info("hlc inited.");
+  logger.info("hlc inited.");
 }
 
 function patchStyle(doc: Document){
