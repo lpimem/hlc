@@ -1,4 +1,4 @@
-import {debug, error} from 'logez';
+import * as logger from 'logez';
 import {Block, extractSelectedBlock, RangeMeta} from 'rangeblock';
 
 import {LocalAppUi} from '../app/app';
@@ -45,7 +45,7 @@ export class Client implements IApp {
       this.m_app.removeHighlight(blk.id);
       blk.setId(newId);
       this.m_app.addBlock(blk, renderOption);
-      debug(`adding block: ${JSON.stringify(blk)}`);
+      logger.debug(`adding block: ${JSON.stringify(blk)}`);
       onSuccess && onSuccess(blk);
     }, renderOption);
   }
@@ -60,7 +60,7 @@ export class Client implements IApp {
           new MSG.hlcmsg.IdList({arr: [Number(block.id)]}), 
           (list) => {
             if (list && list.arr) {
-              debug(`removed ${list.arr.join()}`);
+              logger.debug(`removed ${list.arr.join()}`);
             }
           });
     };
@@ -100,10 +100,30 @@ export class Client implements IApp {
             try {
               this.m_app.restoreHighlight(meta, bid, cfg);
             } catch (e) {
-              error(`cannot restore meta: ${bid} | ${JSON.stringify(metaMsgProps)}, ${e.toString()}`);
+              logger.error(`cannot restore meta: ${bid} | ${JSON.stringify(metaMsgProps)}, ${e.toString()}`);
             }
           }
         });
+  }
+
+  deleteAll():void{
+    logger.info("delete all");
+    let blockMap = getGlobalBlockMap();
+    let keys = blockMap.getKeys();
+    let idArr: number[] = [];
+    keys.forEach((v,i)=>{
+      try{
+        idArr.push(Number(v));
+        this.m_app.removeHighlight(String(v));
+      }catch(ignore){
+      }
+    });
+    let list : MSG.hlcmsg.IdList = MSG.hlcmsg.IdList.create({arr: idArr});
+    this.m_api.delete(list, (deletedList)=>{
+      deletedList.arr.forEach((v, i)=>{
+        logger.debug(`${v} deleted.`);
+      });
+    });
   }
 
   private itemCtxMenuOptions(): ItemCtxMenuOptions {
@@ -124,7 +144,7 @@ export class Client implements IApp {
     n.pageid = this.m_pid;
     n.url = window.location.toString();
     let renderOption = renderCfg ? renderCfg.decoratorName : '';
-    debug('saving block with option: ' + renderOption);
+    logger.debug('saving block with option: ' + renderOption);
     n.highlights.push(metaToMsg(block.rangeMeta, renderOption));
     this.m_api.save(n, (savedIdList) => {
       onSave(block, savedIdList.arr[0].toString());

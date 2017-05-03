@@ -93,7 +93,9 @@ export class LocalAppUi implements IApp {
       let note = this.m_ftnotes[ftId];
       if (note.removeHighlight(blockId)) {
         this.m_layout_snapshots.remove(blockId);
+        this.m_blockMap.deleteBlock(blockId);
         onSuccess && onSuccess(blockId);
+        return
       }
     }
     let reason : string = `${blockId} not found in any footnotes`;

@@ -79,6 +79,10 @@ function addShortcuts(app: IApp) {
     let md = app.generateMarkdownNotes();
     MsgBox.show(md);
   });
+
+  jskbd.setShortcut([jskbd.CTRL_LEFT], "KeyD", () => {
+    (app as Client).deleteAll();
+  });
   jskbd.start(window);
 }
 
