@@ -24,7 +24,7 @@
     "js-ctx-menu": "^1.1.2",
     "jskbd": "1.x",
     "protobufjs": "^6.7.1",
-    "rangeblock": "^1.0.0",
+    "rangeblock": "^1.1.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },

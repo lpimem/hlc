@@ -73,8 +73,8 @@ export class LocalAppUi implements IApp {
       this.addBlock(block, config);
       restored = block.id;
     }catch(e){
-      logger.error(`Cannot restore meta ${id}`);
-      logger.debug(e);
+      logger.error(`Cannot restore meta ${id}: ${String(e)}`);
+      logger.info(e);
       this.addToRetry(id, meta, config);
     }
     return restored;
