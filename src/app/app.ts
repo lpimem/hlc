@@ -1,5 +1,4 @@
 import { BlockDecorator, BlockDecoratorFactory } from '../decorator/decorator';
-import { info } from 'rangeblock/dist/util/log';
 import { Footnote } from '../components/Footnote';
 import { BlockStyle } from '../decorator/block_style';
 import { MutationSummary, Summary } from '../util/mutation-summary';
@@ -10,7 +9,7 @@ import { ItemCtxMenu, ItemCtxMenuOptions } from './ctx_menu';
 import * as DefinedDecorators from './decorators';
 import * as Markdown from 'hlc-js-helpers';
 import { clearSelection, getNodeByPath, select, getSelectedRange} from 'hlc-js-helpers';
-import { debug } from 'logez';
+import * as logger from 'logez';
 import { Block, extractSelectedBlock, RangeMeta, restoreBlock } from 'rangeblock';
 import * as rangeblock from 'rangeblock';
 import { Dimension } from 'rangeblock';
@@ -40,6 +39,7 @@ export class LocalAppUi implements IApp {
     this.m_layout_snapshots = new LayoutSnapshots(doc);
     this.observeResize();
     this.observeMouseDown();
+    this.observeFootnotedSubtree(this.m_doc.body);
   }
 
   /**
@@ -66,10 +66,18 @@ export class LocalAppUi implements IApp {
    * @param id optional, the id for the restored block
    * @return restored block id
    */
-  public restoreHighlight(meta: RangeMeta, id?: string, config?: IBlockConfig) {
-    let block = restoreBlock(this.m_win, this.m_doc, meta, id);
-    this.addBlock(block, config);
-    return block.id;
+  public restoreHighlight(meta: RangeMeta, id?: string, config?: IBlockConfig) :string {
+    let restored = null;
+    try{
+      let block = restoreBlock(this.m_win, this.m_doc, meta, id);
+      this.addBlock(block, config);
+      restored = block.id;
+    }catch(e){
+      logger.error(`Cannot restore meta ${id}`);
+      logger.debug(e);
+      this.addToRetry(id, meta, config);
+    }
+    return restored;
   }
 
   /**
@@ -89,7 +97,7 @@ export class LocalAppUi implements IApp {
       }
     }
     let reason : string = `${blockId} not found in any footnotes`;
-    debug(`removeHighlight: ${reason}`);
+    logger.debug(`removeHighlight: ${reason}`);
     onFail && onFail(blockId, reason);
   }
 
@@ -131,16 +139,23 @@ export class LocalAppUi implements IApp {
    */
   public addBlock(blk: Block, renderOption: IBlockConfig): void {
     let ftntId = blk.rangeCache.meta.anchorUPath;
-    let decorator = DefinedDecorators.getDecorator(renderOption.decoratorName);
+    let decorator : BlockDecorator;
+    if (renderOption.decoratorName){
+      decorator = DefinedDecorators.getDecorator(renderOption.decoratorName);
+    } else if (renderOption.decorator){
+      decorator = renderOption.decorator;
+    } else {
+      decorator = DefinedDecorators.getDecorator(DefinedDecorators.Option.Default);
+    }
     let blkStyle = decorator(blk);
     if (ftntId in this.m_ftnotes) {
       let ftnt: Footnote = this.m_ftnotes[ftntId];
       ftnt.addHighlight(blkStyle);
-      debug(`added to existing ftnt: ${ftntId}`);
+      logger.debug(`added to existing ftnt: ${ftntId}`);
     } else {
-      debug(`generating new ftnt under : ${ftntId}`);
+      logger.debug(`generating new ftnt under : ${ftntId}`);
       let anchor = this.renderFootnote(ftntId, [blkStyle]);
-      this.observeFootnotedSubtree(anchor, ftntId);
+      // this.observeFootnotedSubtree(anchor, ftntId);
     }
     this.m_blockMap.addBlock(blk);
   }
@@ -184,6 +199,26 @@ export class LocalAppUi implements IApp {
     return notes;
   }
 
+  private addToRetry(id:string, meta: rangeblock.RangeMeta, config: IBlockConfig){
+    for (let save of this.m_retry_meta_q){
+      if (save[0] == id){
+        return;
+      }
+    }
+    this.m_retry_meta_q.push([id, meta, config]);
+  }
+
+  private retryFailed(){
+    let suc : number[] = [];
+    let failed = this.m_retry_meta_q.splice(0, this.m_retry_meta_q.length);
+    failed.forEach((save, i)=>{
+      let id = save[0];
+      let meta = save[1];
+      let config = save[2];
+      this.restoreHighlight(meta, id, config);
+    });
+  }
+
   private getOrCreateContainer(cid: string, parent: Node): HTMLElement {
     let d = this.m_doc.getElementById(cid);
     if (!d) {
@@ -196,7 +231,7 @@ export class LocalAppUi implements IApp {
   }
 
   private onItemClick(id: string, evt: MouseEvent): void {
-    debug(`item ${id} clicked`);
+    logger.debug(`item ${id} clicked`);
   }
 
   private onItemCtxMenu(id: string, evt: MouseEvent): void {
@@ -225,7 +260,7 @@ export class LocalAppUi implements IApp {
         },
       }
     });
-    debug("putting footnotes under", container);
+    logger.debug("putting footnotes under", container);
     ReactDOM.unmountComponentAtNode(container);
     ReactDOM.render(ftntEl, container);
     return anchor;
@@ -282,7 +317,7 @@ export class LocalAppUi implements IApp {
       if (force || this.m_layout_snapshots.isChanged(fid, anchor, this.m_doc.body)){
         this.redrawFootnote(fid, template, force, recalculateDim);
       } else {
-        debug(`{fid} didn't change.`);
+        logger.debug(`{fid} didn't change.`);
       }
     }
   }
@@ -295,41 +330,108 @@ export class LocalAppUi implements IApp {
         clearTimeout(timer);
       }
       setTimeout(()=>{
-        debug('on document resize');
+        logger.debug('on document resize');
         this.redrawAll();
       }, 50);
     });
-    info("observing resizing events");
+    logger.info("observing resizing events");
   }
 
-  private observeFootnotedSubtree(anchor: HTMLElement, footnoteId: string){
+  private shouldHandleElementChange(e: HTMLElement): boolean {
+    if (!e || !e.classList ){ return true;}
+    let should = true;
+    let elementCls = e.classList.item(0);
+    for (let cls of [ APP_CONSTS.DefaultFootnoteClass(),
+                      APP_CONSTS.DefaultFootnoteContainerClass(), 
+                      APP_CONSTS.DefaultFootnoteItemClass(), 
+                      APP_CONSTS.DefaultItemRowClass(), 
+                      // context menu
+                      "jscm_root",
+                      "jscm_item"
+                      ]){
+      if (elementCls == cls){
+        should = false;
+        break;
+      }
+    }
+    return should;
+  }
+
+  private shouldHandleChange(changes: Summary[]): boolean {
+    for (let c of changes){
+      // nodes
+      for (let nodes of [c.added, c.removed, c.reordered, c.reparented, c.valueChanged]){
+        if (!nodes){
+          continue;
+        }
+        for (let n of nodes){
+          if ( n.nodeType == Node.ELEMENT_NODE){
+            let e = n as HTMLElement;
+            if (this.shouldHandleElementChange(e)){
+              return true;
+            }
+          }
+        }
+      }
+      // attributes
+      for (let attr in c.attributeChanged){
+        let elements = c.attributeChanged[attr];
+        for (let e of elements){
+          if (this.shouldHandleElementChange(e as HTMLElement)){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+
+  private observeFootnotedSubtree(anchor: HTMLElement, footnoteId?: string){
     let timer : number;
     let ob = observe(anchor, (changes: Summary[])=>{
-      debug(`${changes.length} changes detected.`);
+      logger.debug(`${changes.length} changes detected.`);
+      if (timer){
+        clearTimeout(timer);
+      }
       timer = setTimeout(()=>{
-        if (timer){
-          clearTimeout(timer);
+        timer = null;
+        if (!this.shouldHandleChange(changes)){
+          logger.debug("all changes can be ignored");
+          return;
         }
-        debug("handling subtree change");
-        if (this.m_layout_snapshots.isChanged(footnoteId, anchor, this.m_doc.body)){
-          this.m_win.requestAnimationFrame(()=>{
-            this.redrawFootnote(footnoteId);
-          });
+        logger.debug("handling subtree change");
+        this.retryFailed();
+        let idlist : string[];
+        if (footnoteId){
+          idlist = [footnoteId];
+        } else {
+          idlist = [];
+          for (let id in this.m_ftnotes){
+            idlist.push(id);
+          }
+        }
+        for (let id of idlist){
+          if (this.m_layout_snapshots.isChanged(id, anchor, this.m_doc.body)){
+            this.m_win.requestAnimationFrame(()=>{
+              this.redrawFootnote(id);
+            });
+          }
         }
       }, 75) as any;
     });
-    this.m_observers[footnoteId] = ob;
+    if (footnoteId) this.m_observers[footnoteId] = ob;
   }
 
   private redrawFootnote(footnoteId:string, decoratorFactory?: BlockDecoratorFactory, force?:boolean, recalculateDim:boolean = true) {
     let ftnt = this.m_ftnotes[footnoteId];
     if (!ftnt)
     {
-      debug("redrawFootnote: cannot find footnote: " + footnoteId);
+      logger.debug("redrawFootnote: cannot find footnote: " + footnoteId);
       return ;
     }
-    let old = ftnt.getAll();
-    let newStyles = this.recomputeStyles(old, decoratorFactory, recalculateDim);
+    let olds = ftnt.getAll();
+    let newStyles = this.recomputeStyles(olds, decoratorFactory, recalculateDim);
     if (force)
     {
       this.renderFootnote(footnoteId, newStyles);
@@ -337,10 +439,39 @@ export class LocalAppUi implements IApp {
     else
     {
       this.m_win.requestAnimationFrame(()=>{
-        debug(`re-rendering footnote ${footnoteId}`);
+        logger.debug(`re-rendering footnote ${footnoteId}`);
         this.renderFootnote(footnoteId, newStyles);
       });
     }
+  }
+
+  private recomputeBlockStyle(one: BlockStyle, template: BlockDecoratorFactory, recalculateDim:boolean): BlockStyle{
+    let block = this.m_blockMap.getBlock(one.id);
+    let decorate : BlockDecorator = template.clone()
+                            .insertRowClass(one.RowClass)
+                            .insertRowContainerClass(one.ItemClass)
+                            .build();
+    if ( recalculateDim )
+    { 
+      try {
+        block.recalculateDimension();
+      } catch (e) {
+        this.m_retry_meta_q.push([block.id, block.rangeMeta, {decorator: decorate}]);
+        return null;
+      }
+      let suc = false;
+      for (let dim of block.dimensions){
+        if (dim.Width > 0 && dim.Height > 0){
+          suc = true;
+          break;
+        }
+      }
+      if (!suc){
+        this.m_retry_meta_q.push([block.id, block.rangeMeta, {decorator: decorate}]);
+        return null;
+      }
+    }
+    return decorate(block);
   }
 
   private recomputeStyles(old: BlockStyle[], template?: BlockDecoratorFactory, recalculateDim:boolean = true): BlockStyle[]{
@@ -349,18 +480,10 @@ export class LocalAppUi implements IApp {
       template = new BlockDecoratorFactory();
     }
     for (let one of old){
-      let block = this.m_blockMap.getBlock(one.id);
-      if ( recalculateDim )
-      {
-        block.recalculateDimension();
+      let style = this.recomputeBlockStyle(one, template, recalculateDim);
+      if(style){
+        result.push(style);
       }
-      let style : BlockStyle;
-      let decorate = template.clone()
-                             .insertRowClass(one.RowClass)
-                             .insertRowContainerClass(one.ItemClass)
-                             .build();
-      style = decorate(block);
-      result.push(style);
     }
     return result;
   }
@@ -372,13 +495,15 @@ export class LocalAppUi implements IApp {
   private m_observers: {[key:string]: MutationSummary} = {};
   private m_layout_snapshots: LayoutSnapshots;
 
+  private m_retry_meta_q : [string, rangeblock.RangeMeta, IBlockConfig][] = [];
+
   private m_doc: Document;
   private m_win: Window;
 }
 
 // TODO: 
 function observe(anchor: Node, callback: (changes: Summary[]) => void): MutationSummary {
-  debug("start observing" , anchor);
+  logger.debug("start observing" , anchor);
   let ms = new MutationSummary({
     callback: callback,
     // rootNode: anchor,
