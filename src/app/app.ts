@@ -55,6 +55,7 @@ export class LocalAppUi implements IApp {
     let block: Block = extractSelectedBlock(window, document);
     if (!block) {
       onFail && onFail("no selected text found");
+      return
     }
     this.addBlock(block, renderOption);
     onSuccess && onSuccess(block);
