@@ -70,7 +70,7 @@ export class LocalAppUi implements IApp {
   public restoreHighlight(meta: RangeMeta, id?: string, config?: IBlockConfig) :string {
     let restored = null;
     try{
-      let block = restoreBlock(this.m_win, this.m_doc, meta, id);
+      let block = restoreBlock(this.m_win, this.m_doc, meta, id, true);
       this.addBlock(block, config);
       restored = block.id;
     }catch(e){
