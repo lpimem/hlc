@@ -9,9 +9,9 @@ import {
 
 export enum Option {
   Default,
-  PaleYellow,
-  Purple,
-  RedHollowGlow,
+  Option1,
+  Option2,
+  Option3,
 }
 
 export function getOptName(opt: Option): string{
@@ -20,19 +20,22 @@ export function getOptName(opt: Option): string{
 
 let decorators: { [name: string]: BlockDecorator } = {
   "Default": DefaultBlockDecorator(),
-  "PaleYellow": null,
-  "Purple": null,
-  "RedHollowGlow": null
+  "Option1": null,
+  "Option2": null,
+  "Option3": null
 };
 
 let decoratorCssClasses : {[name:string]: string} = {
   "Default": DefaultItemRowClass(),
-  "PaleYellow": "hlcir_pale_yellow",
-  "Purple": "hlcir_purple",
-  "RedHollowGlow": "hlcir_red_glow_hollow"
+  "Option1": "hlcir_option_1",
+  "Option2": "hlcir_option_2",
+  "Option3": "hlcir_option_3"
 };
 
-export function getCssClassName(opt: string){
+export function getCssClassName(opt: string | Option){ 
+  if (typeof opt != 'string'){
+    opt = getOptName(opt as Option);
+  }
   return decoratorCssClasses[opt] || DefaultItemRowClass();
 }
 

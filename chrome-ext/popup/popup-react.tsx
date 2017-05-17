@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as decorators from "../../src/app/decorators";
+import * as DefaultStyles from "../../src/decorator/default_styles";
 import * as popup from "./popup";
 import * as logger from "logez";
 
@@ -38,6 +39,8 @@ function configs(): [string, string][]{
 function changeCfg(opt: string, onSuc:(option:string)=>{}){
   popup.changeCSConfig(opt, onSuc, (reason:string)=>{ logger.error(`Cannot change config: ${reason}`); });
 }
+
+DefaultStyles.addDefaultStyles(document);
 
   window.requestAnimationFrame(()=>{
     ReactDOM.render(

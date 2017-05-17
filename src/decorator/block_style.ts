@@ -51,7 +51,6 @@ function dimensionToCSSProperties(
   layout.width = `${dim.Width}px`;
   layout.height = `${dim.Height}px`;
   layout.boxSizing = 'border';
-  layout.border = '0';
   if (zIndex > 1) {
     layout.zIndex = zIndex;
   }

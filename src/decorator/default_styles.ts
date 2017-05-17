@@ -1,4 +1,5 @@
 import * as CONSTS from '../app/consts';
+import * as Decorations from "../app/decorators";
 import { createStyleSheet } from 'hlc-js-helpers';
 
 
@@ -16,27 +17,28 @@ export function addDefaultStyles(doc: Document){
 }
 
 .${CONSTS.DefaultItemRowClass()} {
-  background-color: ${CONSTS.DefaultColor()};
+  background-color: #FFFF00;
   opacity: ${CONSTS.DefaultOpacity()};
   z-index: ${CONSTS.DefaultZIndex()};
   border-radius: 3px;
   box-shadow: 0 1px 5px rgba(0,0,0,0.25);
 }
 
-.hlcir_red_glow_hollow {
-    opacity: 0.50;
-    background-color: transparent;
-    box-shadow: 0 0px 10px rgba(255, 0, 0, 1);
-}
-
-.hlcir_pale_yellow{
-  background-color: #FF0;
+.${Decorations.getCssClassName(Decorations.Option.Option1)}{
+  background-color: #00A0FF;
   opacity: 0.28;
 }
 
-.hlcir_purple{
-  background-color: #F0F;
+.${Decorations.getCssClassName(Decorations.Option.Option2)}{
+  background-color: #FF00FF;
   opacity: 0.16;
+}
+
+.${Decorations.getCssClassName(Decorations.Option.Option3)} {
+    opacity: 0.50;
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom: #FF0000 2px solid;
 }
 
 /** CtxMenu */

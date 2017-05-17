@@ -18,10 +18,6 @@ export function DefaultItemRowClass () : string{
   return "hlc_row";
 }
 
-export function DefaultColor(): string{
-  return "green";
-}
-
 export function DefaultOpacity(): number {
   return 0.25;
 }

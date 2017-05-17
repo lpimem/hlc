@@ -19,40 +19,16 @@
   box-shadow: 0 0 4px black;
 }
 
-.hlc_row{
-  background-color: green;
-  opacity: 0.25;
-  z-index: 99999999;
-  border-radius: 3px;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.25);
-}
-
-.hlcir_red_glow_hollow {
-    opacity: 0.50;
-    box-shadow: 0 0px 10px rgba(255, 0, 0, 0.90);
-}
-
-.hlcir_pale_yellow{
-  background-color: #FF0;
-  opacity: 1;
-}
-
-.hlcir_purple{
-  background-color: #F0F;
-  opacity: 0.16;
-}
-
 .hlc-config-container{
   padding: 5px 0 5px 0;
 }
 
-.hlc-cfg-item{
+.hlc-cfg-item, .hlc_row.hlc-cfg-item{
   display: inline-block;
   margin: 10px;
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  border: 0;
   opacity: 1;
   cursor: pointer;
 }

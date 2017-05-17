@@ -55,7 +55,7 @@ export class LocalAppUi implements IApp {
     let block: Block = extractSelectedBlock(window, document);
     if (!block) {
       onFail && onFail("no selected text found");
-      return
+      return;
     }
     this.addBlock(block, renderOption);
     onSuccess && onSuccess(block);
@@ -96,7 +96,7 @@ export class LocalAppUi implements IApp {
         this.m_layout_snapshots.remove(blockId);
         this.m_blockMap.deleteBlock(blockId);
         onSuccess && onSuccess(blockId);
-        return
+        return;
       }
     }
     let reason : string = `${blockId} not found in any footnotes`;
