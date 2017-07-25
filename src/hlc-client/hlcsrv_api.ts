@@ -1,28 +1,29 @@
 /// <reference path="../../node_modules/protobufjs/stub-long.d.ts" />
 
-import { debug, error, info, warn } from 'logez';
-import { ServerAPI } from './client';
+import {debug, error, info, warn} from 'logez';
+
 import * as MSG from '../compiled/proto.js';
-import { login, logout } from './auth';
+
+import {login, logout} from './auth';
+import {ServerAPI} from './client';
 
 export class HlcSrvAPI implements ServerAPI {
-
   constructor(win: Window, urlBase: string, token: string) {
     HlcSrvAPI.TOKEN = token;
     this.m_base = urlBase;
-    this.m_get = urlBase + "pagenote";
-    this.m_new = urlBase + "pagenote/new";
-    this.m_del = urlBase + "pagenote/delete";
+    this.m_get = urlBase + 'pagenote';
+    this.m_new = urlBase + 'pagenote/new';
+    this.m_del = urlBase + 'pagenote/delete';
   }
 
-  public get(uid: number,
-    url: string,
-    callback: (pagenote: MSG.hlcmsg.Pagenote) => void): void {
+  public get(
+      uid: number, url: string,
+      callback: (pagenote: MSG.hlcmsg.Pagenote) => void): void {
     let req = `${this.m_get}?uid=${uid}&url=${encodeURI(url)}`;
     HlcSrvAPI.get(req, (resp) => {
       if (resp.code == MSG.hlcmsg.HlcResp.RespCode.SUC) {
         if (!resp.pagenoteList || resp.pagenoteList.length < 1) {
-          debug("server returned no pagenote");
+          debug('server returned no pagenote');
           return;
         }
         let pagenote = resp.pagenoteList[0];
@@ -33,13 +34,15 @@ export class HlcSrvAPI implements ServerAPI {
     });
   }
 
-  public save(n: MSG.hlcmsg.Pagenote$Properties, callback: (savedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
+  public save(
+      n: MSG.hlcmsg.Pagenote$Properties,
+      callback: (savedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
     if (!n.highlights || n.highlights.length < 1) {
       return;
     }
     let data = MSG.hlcmsg.Pagenote.encode(n).finish();
     if (data.length < 1) {
-      warn("will not post empty buf");
+      warn('will not post empty buf');
       return;
     }
     HlcSrvAPI.post(this.m_new, data, (v) => {
@@ -48,7 +51,9 @@ export class HlcSrvAPI implements ServerAPI {
     });
   }
 
-  public delete(list: MSG.hlcmsg.IdList$Properties, callback: (removedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
+  public delete(
+      list: MSG.hlcmsg.IdList$Properties,
+      callback: (removedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
     if (!list.arr || list.arr.length < 1) {
       return;
     }
@@ -66,15 +71,15 @@ export class HlcSrvAPI implements ServerAPI {
     HlcSrvAPI.UID = id;
   }
 
-  public static setToken(t : string){
+  public static setToken(t: string) {
     HlcSrvAPI.TOKEN = t;
   }
 
-  public static getUID(): number{
+  public static getUID(): number {
     return HlcSrvAPI.UID;
   }
 
-  public static getToken(): string{
+  public static getToken(): string {
     return HlcSrvAPI.TOKEN;
   }
 
@@ -86,45 +91,34 @@ export class HlcSrvAPI implements ServerAPI {
   private static TOKEN: string;
 
   private static get(url: string, onsuc: (resp: MSG.hlcmsg.HlcResp) => void) {
-    HlcSrvAPI.req("GET", url, null, onsuc);
+    HlcSrvAPI.req('GET', url, null, onsuc);
   }
 
-  private static post(url: string, data: any, onsuc: (resp: MSG.hlcmsg.HlcResp) => void) {
-    HlcSrvAPI.req("POST", url, data, onsuc);
+  private static post(
+      url: string, data: any, onsuc: (resp: MSG.hlcmsg.HlcResp) => void) {
+    HlcSrvAPI.req('POST', url, data, onsuc);
   }
 
-  private static req(method: string,
-    url: string,
-    data: any,
-    onsuc: (resp: MSG.hlcmsg.HlcResp) => void,
-    onfail?: (reason: string) => void) {
+  private static req(
+      method: string, url: string, data: any,
+      onsuc: (resp: MSG.hlcmsg.HlcResp) => void,
+      onfail?: (reason: string) => void) {
     let req = new XMLHttpRequest();
     req.open(method, url, true);
-    req.setRequestHeader("x-hlc-uid", "" + HlcSrvAPI.UID);
-    req.setRequestHeader("x-hlc-token", "" + HlcSrvAPI.TOKEN);
-    req.onreadystatechange = function () {
+    req.setRequestHeader('x-hlc-uid', '' + HlcSrvAPI.UID);
+    req.setRequestHeader('x-hlc-token', '' + HlcSrvAPI.TOKEN);
+    req.onreadystatechange = function() {
       if (req.readyState == XMLHttpRequest.DONE) {
         if (req.status >= 200 && req.status < 305) {
           debug(`response: ${JSON.stringify(req.response)}`);
           let v = req.response;
-          let msgBuf = Uint8Array.from(atob(v) as any, c => (c as any).charCodeAt(0));
+          let msgBuf =
+              Uint8Array.from(atob(v) as any, c => (c as any).charCodeAt(0));
           let r = MSG.hlcmsg.HlcResp.decode(msgBuf);
           debug(`decoded: ${JSON.stringify(r)}`);
           onsuc(r);
-        }
-        else {
+        } else {
           error(`${method}: ${url} | ${req.status}, ${req.statusText}`);
-          // if (req.status == 401) {
-          //   logout(() => {
-          //     login((uid, token) => {
-          //       HlcSrvAPI.UID = uid;
-          //       HlcSrvAPI.TOKEN = token;
-          //       HlcSrvAPI.req(method, url, data, onsuc, onfail);
-          //     }, () => {
-          //       onfail(req.statusText);
-          //     });
-          //   });
-          // }
           if (onfail) {
             onfail(req.statusText);
           }
