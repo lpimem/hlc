@@ -3,6 +3,7 @@ import { HlcConfig } from "./hlc-config";
 import { UserInfo } from "./user-info";
 import * as popup from "../popup/popup";
 import * as React from "react";
+import { HLC_SERVICE_BASE } from "../../src/conf";
 
 export interface PanelProps {
   isLoggedIn: (
@@ -12,8 +13,8 @@ export interface PanelProps {
   logout: (onSuc: () => void) => void;
   profile: () => any;
   blockConfigs: () => [string, string][];
-  changeCfg: (cfgName: string, onSuccess: (opt:string) => void) => void;
-  activeConfig? : string;
+  changeCfg: (cfgName: string, onSuccess: (opt: string) => void) => void;
+  activeConfig?: string;
 }
 
 export interface PanelState {
@@ -38,7 +39,7 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
     };
   }
 
-  private updateCfgsState(active: string){
+  private updateCfgsState(active: string) {
     let cfgs = this.state.configs;
     if (cfgs.length < 1) {
       cfgs = this.generateConfigs(active);
@@ -54,9 +55,9 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
   componentDidMount() {
     this.props.isLoggedIn(
       () => {
-        popup.queryCurrentConfig((resp:string)=>{
+        popup.queryCurrentConfig((resp: string) => {
           this.updateCfgsState(resp);
-        }, (error: string)=>{
+        }, (error: string) => {
           this.updateCfgsState(null);
         });
       },
@@ -68,12 +69,12 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
   }
 
   onConfigChange(option: string) {
-    this.props.changeCfg(option, (opt:string) => {
+    this.props.changeCfg(option, (opt: string) => {
       this.updateConfigState(opt);
     });
   }
 
-  generateConfigs(option?: string): [string, string, string][]{
+  generateConfigs(option?: string): [string, string, string][] {
     let cfgs = this.props.blockConfigs().slice();
     for (let opt of cfgs) {
       if (opt[0] == option) {
@@ -115,6 +116,12 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
     });
   }
 
+  onQueryNotes() {
+    chrome.tabs.create({
+      "url": `${HLC_SERVICE_BASE}q`
+    });
+  }
+
   render(): JSX.Element {
     if (this.state.loggedIn) {
       return <div className="panel">
@@ -122,6 +129,7 @@ export class PopPanel extends React.Component<PanelProps, PanelState>{
         <HlcConfig
           options={this.state.configs}
           onConfigChange={(opt: string) => this.onConfigChange(opt)} />
+        <div className="button" onClick={() => this.onQueryNotes()}>Notes</div>
         <div className="button" onClick={() => this.onLogout()}>Log out</div>
       </div>;
     } else {
