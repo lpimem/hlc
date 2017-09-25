@@ -6,50 +6,50 @@ import * as popup from "./popup";
 import * as logger from "logez";
 
 
-import {PopPanel} from "../components/panel";
+import { PopPanel } from "../components/panel";
 
-function logIn(onSuc :(profile:any)=>void, onFail: any){
+function logIn(onSuc: (profile: any) => void, onFail: (msg: string) => void): void {
   popup.openLogInWindow();
 }
 
-function logout(onSuc: ()=>void){
+function logout(onSuc: () => void) {
   popup.logout(onSuc);
 }
 
-function checkLogin(onLoggedIn:()=>void,
-    onLoggedOut:()=>void){
+function checkLogin(onLoggedIn: () => void,
+  onLoggedOut: () => void) {
   popup.checkLoggedIn(onLoggedIn, onLoggedOut);
 }
 
-function profile(){
+function profile() {
   return {
     name: "dummy user",
   };
 }
 
-function configs(): [string, string][]{
+function configs(): [string, string][] {
   let cfgs: [string, string][] = [];
   let names = decorators.getAllDecoratorNames();
-  for(let n of names ){
+  for (let n of names) {
     cfgs.push([n, decorators.getCssClassName(n)]);
   }
   return cfgs;
 }
 
-function changeCfg(opt: string, onSuc:(option:string)=>{}){
-  popup.changeCSConfig(opt, onSuc, (reason:string)=>{ logger.error(`Cannot change config: ${reason}`); });
+function changeCfg(opt: string, onSuc: (option: string) => {}) {
+  popup.changeCSConfig(opt, onSuc, (reason: string) => { logger.error(`Cannot change config: ${reason}`); });
 }
 
 DefaultStyles.addDefaultStyles(document);
 
-  window.requestAnimationFrame(()=>{
-    ReactDOM.render(
-      <PopPanel 
-        logIn={logIn} 
-        logout={logout} 
-        isLoggedIn={checkLogin} 
-        profile={profile} 
-        blockConfigs={configs}
-        changeCfg={changeCfg} />,
-      document.getElementById("container"));
-  });
+window.requestAnimationFrame(() => {
+  ReactDOM.render(
+    <PopPanel
+      logIn={logIn}
+      logout={logout}
+      isLoggedIn={checkLogin}
+      profile={profile}
+      blockConfigs={configs}
+      changeCfg={changeCfg} />,
+    document.getElementById("container"));
+});

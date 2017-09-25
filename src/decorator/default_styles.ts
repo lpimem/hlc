@@ -22,6 +22,8 @@ export function addDefaultStyles(doc: Document){
   z-index: ${CONSTS.DefaultZIndex()};
   border-radius: 3px;
   box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+  padding: 0;
+  margin: 0;
 }
 
 .${Decorations.getCssClassName(Decorations.Option.Option1)}{
