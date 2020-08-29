@@ -1,5 +1,9 @@
+let mode = 'production';
+let devtool = 'cheap-module-source-map';
 module.exports = [{
     entry: "./src/init.ts",
+    mode: mode,
+    devtool: devtool,
     output: {
         filename: "hlc.inject.js",
         path: __dirname + "/dist"
@@ -30,6 +34,8 @@ module.exports = [{
     },
 }, {
     entry: "./chrome-ext/popup/popup-react.tsx",
+    mode: mode,
+    devtool: devtool,
     output: {
         filename: "popup-react.js",
         path: __dirname + "/chrome-dist"
@@ -60,6 +66,8 @@ module.exports = [{
     },
 },{
     entry: "./chrome-ext/bg/bg.ts",
+    mode: mode,
+    devtool: devtool,
     output: {
         filename: "bg.js",
         path: __dirname + "/chrome-dist"

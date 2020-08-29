@@ -9,7 +9,9 @@ export function checkLoggedIn(onLogin: () => void, onFail: () => void) {
     queryLogin: true
   }, (resp:boolean)=>{
     if (chrome.runtime.lastError || !resp){
-      console.error(chrome.runtime.lastError);
+      if (chrome.runtime.lastError) {
+        console.error("Error checking login status:", chrome.runtime.lastError);
+      }
       onFail();
     } else {
       onLogin();

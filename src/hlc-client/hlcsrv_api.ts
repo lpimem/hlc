@@ -6,7 +6,8 @@ import {login, logout} from './auth';
 import {ServerAPI} from './client';
 
 export class HlcSrvAPI implements ServerAPI {
-  constructor(win: Window, urlBase: string, token: string) {
+  constructor(win: Window, urlBase: string, uid: number, token: string) {
+    HlcSrvAPI.UID = uid;
     HlcSrvAPI.TOKEN = token;
     this.m_base = urlBase;
     this.m_get = urlBase + 'pagenote';

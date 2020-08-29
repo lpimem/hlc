@@ -2,7 +2,7 @@ import * as logez from 'logez/dist';
 
 import {HlcSrvAPI} from './hlcsrv_api';
 
-function checkLocalCredential(
+export function checkLocalCredential(
     onLogin: (uid: number, token: string) => void, onFail: () => void) {
   chrome.storage.local.get(['hlc_uid', 'hlc_token'], (data) => {
     if (chrome.runtime.lastError) {

@@ -34,7 +34,7 @@ function init(doc: Document) {
 }
 
 function createApp(doc: Document, uid:number, token: string){
-  let api = new HlcSrvAPI(doc.defaultView, `${HLC_SERVICE_BASE}`, token);
+  let api = new HlcSrvAPI(doc.defaultView, `${HLC_SERVICE_BASE}`, uid, token);
   let app: IApp = new Client(uid, doc, api);
   MsgBox.init();
   addEventListeners(doc, app);

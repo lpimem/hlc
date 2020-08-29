@@ -1,5 +1,6 @@
 import {HLC_SERVICE_BASE} from '../../src/conf';
 import {req} from '../../src/util/req';
+import { checkLocalCredential } from '../../src/hlc-client/auth';
 
 let $ = document.getElementById.bind(document);
 let HLC_UID: number = null;
@@ -84,5 +85,9 @@ function registerMessageHandlers() {
 
 export function init() {
   registerMessageHandlers();
+  checkLocalCredential((uid:number, token:string) => {
+    HLC_UID = uid;
+    HLC_TOKEN = token;
+  }, ()=>{});
 }
 init();

@@ -1,4 +1,4 @@
-# hlc 
+# hlc
 
 [![Build Status](https://travis-ci.org/lpimem/hlc.svg?branch=master)](https://travis-ci.org/lpimem/hlc)
 ----
@@ -12,7 +12,7 @@ A free open-source web-page annotation plug-in. This project is built upon [rang
 
 - [x] static web page 
 - [x] dynamic web pages
-- [x] persistant storage 
+- [x] persistent storage 
 - [x] Google Sign-In
 - [ ] More test and bug fix
 
