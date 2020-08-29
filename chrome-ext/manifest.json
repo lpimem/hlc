@@ -2,8 +2,8 @@
     "manifest_version": 2,
 
     "name": "HLC",
-    "description": "Make notes and marks on your web page.",
-    "version": "0.0.0.10",
+    "description": "Highlight texts on web pages.",
+    "version": "0.0.10",
 
     "permissions": [
         "activeTab",
