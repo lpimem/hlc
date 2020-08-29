@@ -27,8 +27,8 @@ export interface PanelState {
 }
 
 export class PopPanel extends React.Component<PanelProps, PanelState>{
-  constructor() {
-    super();
+  constructor(p: PanelProps) {
+    super(p);
     this.state = {
       loggedIn: false,
       name: undefined,

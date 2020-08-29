@@ -2,31 +2,33 @@
   "name": "hlc",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/init.ts",
   "scripts": {
     "test": "jest"
   },
   "author": "lpi",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^19.2.2",
-    "awesome-typescript-loader": "^3.1.2",
-    "jest": "^19.0.2",
-    "source-map-loader": "^0.2.0",
-    "ts-jest": "^19.0.4",
-    "typescript": "^2.2.1"
+    "@types/jest": "^26.0.10",
+    "awesome-typescript-loader": "^5.2.1",
+    "jest": "^26.4.2",
+    "source-map-loader": "^1.1.0",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@types/chrome": "0.0.46",
-    "@types/react": "^15.0.16",
-    "@types/react-dom": "^0.14.23",
+    "@types/chrome": "0.0.122",
+    "@types/react": "^16.9.48",
+    "@types/react-dom": "^16.9.8",
     "hlc-js-helpers": "^1.0.0",
     "js-ctx-menu": "^1.1.2",
     "jskbd": "1.x",
     "protobufjs": "^6.7.1",
     "rangeblock": "^1.2.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "jest": {
     "transform": {

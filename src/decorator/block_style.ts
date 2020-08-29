@@ -1,4 +1,4 @@
-import {CSSProperties} from '@types/react';
+import {CSSProperties} from 'react';
 import {Block, Dimension} from 'rangeblock';
 
 import * as CONSTS from '../app/consts';
@@ -50,7 +50,7 @@ function dimensionToCSSProperties(
   layout.left = `${dim.Left}px`;
   layout.width = `${dim.Width}px`;
   layout.height = `${dim.Height}px`;
-  layout.boxSizing = 'border';
+  layout.boxSizing = "border-box";
   layout.padding = '0';
   layout.margin = '0';
   if (zIndex > 1) {

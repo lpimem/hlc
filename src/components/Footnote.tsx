@@ -16,8 +16,8 @@ interface FootnoteState {
 }
 
 export class Footnote extends React.Component<FootnoteProps, FootnoteState>{
-  constructor() {
-    super();
+  constructor(p: FootnoteProps) {
+    super(p);
     this.state = { highlights: [] } as FootnoteState;
   }
 

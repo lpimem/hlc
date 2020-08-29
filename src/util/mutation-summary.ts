@@ -439,7 +439,7 @@ class MutationProjection {
     var parentNode = node.parentNode;
     var nodeChange = this.treeChanges.get(node);
     if (nodeChange && nodeChange.oldParentNode)
-      parentNode = nodeChange.oldParentNode;
+      parentNode = <any> nodeChange.oldParentNode;
 
     var change = this.childListChangeMap.get(parentNode);
     if (!change) {
@@ -505,7 +505,7 @@ class MutationProjection {
     var parentNode = node.parentNode;
     var nodeChange = this.treeChanges.get(node);
     if (nodeChange && nodeChange.oldParentNode)
-      parentNode = nodeChange.oldParentNode;
+      parentNode = <any> nodeChange.oldParentNode;
 
     var change = this.childListChangeMap.get(parentNode);
     if (!change)
@@ -751,7 +751,7 @@ class MutationProjection {
     var parentNode = node.parentNode;
     var nodeChange = this.treeChanges.get(node);
     if (nodeChange && nodeChange.oldParentNode)
-      parentNode = nodeChange.oldParentNode;
+      parentNode = <any> nodeChange.oldParentNode;
 
     var change = this.childListChangeMap.get(parentNode);
     if (!change)
@@ -942,7 +942,7 @@ class Qualifier {
     if ('attrValue' in this)
       return '[' + this.attrName + '=' + escapeQuotes(this.attrValue) + ']';
 
-    return '[' + this.attrName + ']';
+    return '[' + (<any> this).attrName + ']';
   }
 }
 
@@ -954,7 +954,7 @@ class Selector {
       return 'webkitMatchesSelector';
     if (typeof (element as any)['mozMatchesSelector'] === 'function')
       return 'mozMatchesSelector';
-    if (typeof element['msMatchesSelector'] === 'function')
+    if (typeof (<any>element)['msMatchesSelector'] === 'function')
       return 'msMatchesSelector';
 
     return 'matchesSelector';

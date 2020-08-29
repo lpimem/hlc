@@ -36,7 +36,7 @@ function configs(): [string, string][] {
   return cfgs;
 }
 
-function changeCfg(opt: string, onSuc: (option: string) => {}) {
+function changeCfg(opt: string, onSuc: (option: string) => void): void {
   popup.changeCSConfig(opt, onSuc, (reason: string) => { logger.error(`Cannot change config: ${reason}`); });
 }
 

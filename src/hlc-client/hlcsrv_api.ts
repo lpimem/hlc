@@ -1,5 +1,3 @@
-/// <reference path="../../node_modules/protobufjs/stub-long.d.ts" />
-
 import {debug, error, info, warn} from 'logez';
 
 import * as MSG from '../compiled/proto.js';
@@ -35,8 +33,8 @@ export class HlcSrvAPI implements ServerAPI {
   }
 
   public save(
-      n: MSG.hlcmsg.Pagenote$Properties,
-      callback: (savedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
+      n: MSG.hlcmsg.IPagenote,
+      callback: (savedIdList: MSG.hlcmsg.IIdList) => void): void {
     if (!n.highlights || n.highlights.length < 1) {
       return;
     }
@@ -52,8 +50,8 @@ export class HlcSrvAPI implements ServerAPI {
   }
 
   public delete(
-      list: MSG.hlcmsg.IdList$Properties,
-      callback: (removedIdList: MSG.hlcmsg.IdList$Properties) => void): void {
+      list: MSG.hlcmsg.IIdList,
+      callback: (removedIdList: MSG.hlcmsg.IIdList) => void): void {
     if (!list.arr || list.arr.length < 1) {
       return;
     }

@@ -16,13 +16,11 @@ export function addRequestListeners(app: IApp){
 
     if (!configs.isEnabled() && newValue){
       try{
-        let suc = app.highlightSelection(r.newConfig);
-        if (suc){
+        app.highlightSelection(r.newConfig, (block) => {
           send("");
-          return;
-        } else {
+        }, (error) => {
           configs.toggleEnabled();
-        }
+        });
       }catch(ignore){logger.debug(ignore);}
     }
 

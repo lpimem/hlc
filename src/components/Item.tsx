@@ -21,8 +21,8 @@ export interface RowOptions {
 }
 
 export class Item extends React.Component<ItemProps, any>{
-  constructor() {
-    super();
+  constructor(p: ItemProps) {
+    super(p);
   }
 
   onClick(evt: React.MouseEvent<HTMLElement>) {

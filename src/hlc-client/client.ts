@@ -10,13 +10,13 @@ import { getGlobalBlockMap } from "../app/block_map";
 
 export interface ServerAPI {
   get(uid: number, url: string,
-      callback: (pagenote: MSG.hlcmsg.Pagenote) => void): void;
+      callback: (pagenote: MSG.hlcmsg.IPagenote) => void): void;
   save(
-      n: MSG.hlcmsg.Pagenote,
-      callback: (savedIdList: MSG.hlcmsg.IdList) => void): void;
+      n: MSG.hlcmsg.IPagenote,
+      callback: (savedIdList: MSG.hlcmsg.IIdList) => void): void;
   delete(
-      list: MSG.hlcmsg.IdList,
-      callback: (removedIdList: MSG.hlcmsg.IdList) => void): void;
+      list: MSG.hlcmsg.IIdList,
+      callback: (removedIdList: MSG.hlcmsg.IIdList) => void): void;
 }
 
 export class Client implements IApp {
@@ -174,7 +174,7 @@ function metaToMsg(meta: RangeMeta, config: string = ''): MSG.hlcmsg.RangeMeta {
 }
 
 function msgToMeta(
-    m: MSG.hlcmsg.RangeMeta$Properties, text: string = null): RangeMeta {
+    m: MSG.hlcmsg.IRangeMeta, text: string = null): RangeMeta {
   if (text == null) {
     text = m.text;
   }

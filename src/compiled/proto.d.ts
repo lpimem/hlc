@@ -1,87 +1,72 @@
 import * as $protobuf from "protobufjs";
-
-/**
- * Namespace hlcmsg.
- * @exports hlcmsg
- * @namespace
- */
+/** Namespace hlcmsg. */
 export namespace hlcmsg {
 
-    type HlcResp$Properties = {
-        code?: hlcmsg.HlcResp.RespCode;
-        msg?: string;
-        pagenoteList?: hlcmsg.Pagenote$Properties[];
-        idList?: hlcmsg.IdList$Properties;
-    };
+    /** Properties of a HlcResp. */
+    interface IHlcResp {
 
-    /**
-     * Constructs a new HlcResp.
-     * @exports hlcmsg.HlcResp
-     * @constructor
-     * @param {hlcmsg.HlcResp$Properties=} [properties] Properties to set
-     */
-    class HlcResp {
+        /** HlcResp code */
+        code?: (hlcmsg.HlcResp.RespCode|null);
+
+        /** HlcResp msg */
+        msg?: (string|null);
+
+        /** HlcResp pagenoteList */
+        pagenoteList?: (hlcmsg.IPagenote[]|null);
+
+        /** HlcResp idList */
+        idList?: (hlcmsg.IIdList|null);
+    }
+
+    /** Represents a HlcResp. */
+    class HlcResp implements IHlcResp {
 
         /**
          * Constructs a new HlcResp.
-         * @exports hlcmsg.HlcResp
-         * @constructor
-         * @param {hlcmsg.HlcResp$Properties=} [properties] Properties to set
+         * @param [properties] Properties to set
          */
-        constructor(properties?: hlcmsg.HlcResp$Properties);
+        constructor(properties?: hlcmsg.IHlcResp);
 
-        /**
-         * HlcResp code.
-         * @type {hlcmsg.HlcResp.RespCode}
-         */
+        /** HlcResp code. */
         public code: hlcmsg.HlcResp.RespCode;
 
-        /**
-         * HlcResp msg.
-         * @type {string}
-         */
+        /** HlcResp msg. */
         public msg: string;
 
-        /**
-         * HlcResp pagenoteList.
-         * @type {Array.<hlcmsg.Pagenote$Properties>}
-         */
-        public pagenoteList: hlcmsg.Pagenote$Properties[];
+        /** HlcResp pagenoteList. */
+        public pagenoteList: hlcmsg.IPagenote[];
 
-        /**
-         * HlcResp idList.
-         * @type {(hlcmsg.IdList$Properties|null)}
-         */
-        public idList: (hlcmsg.IdList$Properties|null);
+        /** HlcResp idList. */
+        public idList?: (hlcmsg.IIdList|null);
 
         /**
          * Creates a new HlcResp instance using the specified properties.
-         * @param {hlcmsg.HlcResp$Properties=} [properties] Properties to set
-         * @returns {hlcmsg.HlcResp} HlcResp instance
+         * @param [properties] Properties to set
+         * @returns HlcResp instance
          */
-        public static create(properties?: hlcmsg.HlcResp$Properties): hlcmsg.HlcResp;
+        public static create(properties?: hlcmsg.IHlcResp): hlcmsg.HlcResp;
 
         /**
          * Encodes the specified HlcResp message. Does not implicitly {@link hlcmsg.HlcResp.verify|verify} messages.
-         * @param {hlcmsg.HlcResp$Properties} message HlcResp message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message HlcResp message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encode(message: hlcmsg.HlcResp$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: hlcmsg.IHlcResp, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Encodes the specified HlcResp message, length delimited. Does not implicitly {@link hlcmsg.HlcResp.verify|verify} messages.
-         * @param {hlcmsg.HlcResp$Properties} message HlcResp message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message HlcResp message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encodeDelimited(message: hlcmsg.HlcResp$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: hlcmsg.IHlcResp, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a HlcResp message from the specified reader or buffer.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {hlcmsg.HlcResp} HlcResp
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns HlcResp
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -89,8 +74,8 @@ export namespace hlcmsg {
 
         /**
          * Decodes a HlcResp message from the specified reader or buffer, length delimited.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {hlcmsg.HlcResp} HlcResp
+         * @param reader Reader or buffer to decode from
+         * @returns HlcResp
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -98,140 +83,107 @@ export namespace hlcmsg {
 
         /**
          * Verifies a HlcResp message.
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
          */
-        public static verify(message: { [k: string]: any }): string;
+        public static verify(message: { [k: string]: any }): (string|null);
 
         /**
          * Creates a HlcResp message from a plain object. Also converts values to their respective internal types.
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.HlcResp} HlcResp
+         * @param object Plain object
+         * @returns HlcResp
          */
         public static fromObject(object: { [k: string]: any }): hlcmsg.HlcResp;
 
         /**
-         * Creates a HlcResp message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.HlcResp.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.HlcResp} HlcResp
-         */
-        public static from(object: { [k: string]: any }): hlcmsg.HlcResp;
-
-        /**
          * Creates a plain object from a HlcResp message. Also converts values to other types if specified.
-         * @param {hlcmsg.HlcResp} message HlcResp
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
+         * @param message HlcResp
+         * @param [options] Conversion options
+         * @returns Plain object
          */
-        public static toObject(message: hlcmsg.HlcResp, options?: $protobuf.ConversionOptions): { [k: string]: any };
-
-        /**
-         * Creates a plain object from this HlcResp message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: hlcmsg.HlcResp, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
          * Converts this HlcResp to JSON.
-         * @returns {Object.<string,*>} JSON object
+         * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
     }
 
     namespace HlcResp {
 
-        /**
-         * RespCode enum.
-         * @name RespCode
-         * @memberof hlcmsg.HlcResp
-         * @enum {number}
-         * @property {number} FAIL=0 FAIL value
-         * @property {number} SUC=1 SUC value
-         */
+        /** RespCode enum. */
         enum RespCode {
             FAIL = 0,
             SUC = 1
         }
     }
 
-    type Pagenote$Properties = {
-        pageid?: number;
-        uid?: number;
-        highlights?: hlcmsg.RangeMeta$Properties[];
-        url?: string;
-    };
+    /** Properties of a Pagenote. */
+    interface IPagenote {
 
-    /**
-     * Constructs a new Pagenote.
-     * @exports hlcmsg.Pagenote
-     * @constructor
-     * @param {hlcmsg.Pagenote$Properties=} [properties] Properties to set
-     */
-    class Pagenote {
+        /** Pagenote pageid */
+        pageid?: (number|null);
+
+        /** Pagenote uid */
+        uid?: (number|null);
+
+        /** Pagenote highlights */
+        highlights?: (hlcmsg.IRangeMeta[]|null);
+
+        /** Pagenote url */
+        url?: (string|null);
+    }
+
+    /** Represents a Pagenote. */
+    class Pagenote implements IPagenote {
 
         /**
          * Constructs a new Pagenote.
-         * @exports hlcmsg.Pagenote
-         * @constructor
-         * @param {hlcmsg.Pagenote$Properties=} [properties] Properties to set
+         * @param [properties] Properties to set
          */
-        constructor(properties?: hlcmsg.Pagenote$Properties);
+        constructor(properties?: hlcmsg.IPagenote);
 
-        /**
-         * Pagenote pageid.
-         * @type {number}
-         */
+        /** Pagenote pageid. */
         public pageid: number;
 
-        /**
-         * Pagenote uid.
-         * @type {number}
-         */
+        /** Pagenote uid. */
         public uid: number;
 
-        /**
-         * Pagenote highlights.
-         * @type {Array.<hlcmsg.RangeMeta$Properties>}
-         */
-        public highlights: hlcmsg.RangeMeta$Properties[];
+        /** Pagenote highlights. */
+        public highlights: hlcmsg.IRangeMeta[];
 
-        /**
-         * Pagenote url.
-         * @type {string}
-         */
+        /** Pagenote url. */
         public url: string;
 
         /**
          * Creates a new Pagenote instance using the specified properties.
-         * @param {hlcmsg.Pagenote$Properties=} [properties] Properties to set
-         * @returns {hlcmsg.Pagenote} Pagenote instance
+         * @param [properties] Properties to set
+         * @returns Pagenote instance
          */
-        public static create(properties?: hlcmsg.Pagenote$Properties): hlcmsg.Pagenote;
+        public static create(properties?: hlcmsg.IPagenote): hlcmsg.Pagenote;
 
         /**
          * Encodes the specified Pagenote message. Does not implicitly {@link hlcmsg.Pagenote.verify|verify} messages.
-         * @param {hlcmsg.Pagenote$Properties} message Pagenote message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message Pagenote message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encode(message: hlcmsg.Pagenote$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: hlcmsg.IPagenote, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Encodes the specified Pagenote message, length delimited. Does not implicitly {@link hlcmsg.Pagenote.verify|verify} messages.
-         * @param {hlcmsg.Pagenote$Properties} message Pagenote message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message Pagenote message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encodeDelimited(message: hlcmsg.Pagenote$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: hlcmsg.IPagenote, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a Pagenote message from the specified reader or buffer.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {hlcmsg.Pagenote} Pagenote
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Pagenote
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -239,8 +191,8 @@ export namespace hlcmsg {
 
         /**
          * Decodes a Pagenote message from the specified reader or buffer, length delimited.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {hlcmsg.Pagenote} Pagenote
+         * @param reader Reader or buffer to decode from
+         * @returns Pagenote
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -248,152 +200,122 @@ export namespace hlcmsg {
 
         /**
          * Verifies a Pagenote message.
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
          */
-        public static verify(message: { [k: string]: any }): string;
+        public static verify(message: { [k: string]: any }): (string|null);
 
         /**
          * Creates a Pagenote message from a plain object. Also converts values to their respective internal types.
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.Pagenote} Pagenote
+         * @param object Plain object
+         * @returns Pagenote
          */
         public static fromObject(object: { [k: string]: any }): hlcmsg.Pagenote;
 
         /**
-         * Creates a Pagenote message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.Pagenote.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.Pagenote} Pagenote
-         */
-        public static from(object: { [k: string]: any }): hlcmsg.Pagenote;
-
-        /**
          * Creates a plain object from a Pagenote message. Also converts values to other types if specified.
-         * @param {hlcmsg.Pagenote} message Pagenote
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
+         * @param message Pagenote
+         * @param [options] Conversion options
+         * @returns Plain object
          */
-        public static toObject(message: hlcmsg.Pagenote, options?: $protobuf.ConversionOptions): { [k: string]: any };
-
-        /**
-         * Creates a plain object from this Pagenote message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: hlcmsg.Pagenote, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
          * Converts this Pagenote to JSON.
-         * @returns {Object.<string,*>} JSON object
+         * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
     }
 
-    type RangeMeta$Properties = {
-        id?: number;
-        anchor?: string;
-        start?: string;
-        startOffset?: number;
-        end?: string;
-        endOffset?: number;
-        text?: string;
-        option?: string;
-    };
+    /** Properties of a RangeMeta. */
+    interface IRangeMeta {
 
-    /**
-     * Constructs a new RangeMeta.
-     * @exports hlcmsg.RangeMeta
-     * @constructor
-     * @param {hlcmsg.RangeMeta$Properties=} [properties] Properties to set
-     */
-    class RangeMeta {
+        /** RangeMeta id */
+        id?: (number|null);
+
+        /** RangeMeta anchor */
+        anchor?: (string|null);
+
+        /** RangeMeta start */
+        start?: (string|null);
+
+        /** RangeMeta startOffset */
+        startOffset?: (number|null);
+
+        /** RangeMeta end */
+        end?: (string|null);
+
+        /** RangeMeta endOffset */
+        endOffset?: (number|null);
+
+        /** RangeMeta text */
+        text?: (string|null);
+
+        /** RangeMeta option */
+        option?: (string|null);
+    }
+
+    /** Represents a RangeMeta. */
+    class RangeMeta implements IRangeMeta {
 
         /**
          * Constructs a new RangeMeta.
-         * @exports hlcmsg.RangeMeta
-         * @constructor
-         * @param {hlcmsg.RangeMeta$Properties=} [properties] Properties to set
+         * @param [properties] Properties to set
          */
-        constructor(properties?: hlcmsg.RangeMeta$Properties);
+        constructor(properties?: hlcmsg.IRangeMeta);
 
-        /**
-         * RangeMeta id.
-         * @type {number}
-         */
+        /** RangeMeta id. */
         public id: number;
 
-        /**
-         * RangeMeta anchor.
-         * @type {string}
-         */
+        /** RangeMeta anchor. */
         public anchor: string;
 
-        /**
-         * RangeMeta start.
-         * @type {string}
-         */
+        /** RangeMeta start. */
         public start: string;
 
-        /**
-         * RangeMeta startOffset.
-         * @type {number}
-         */
+        /** RangeMeta startOffset. */
         public startOffset: number;
 
-        /**
-         * RangeMeta end.
-         * @type {string}
-         */
+        /** RangeMeta end. */
         public end: string;
 
-        /**
-         * RangeMeta endOffset.
-         * @type {number}
-         */
+        /** RangeMeta endOffset. */
         public endOffset: number;
 
-        /**
-         * RangeMeta text.
-         * @type {string}
-         */
+        /** RangeMeta text. */
         public text: string;
 
-        /**
-         * RangeMeta option.
-         * @type {string}
-         */
+        /** RangeMeta option. */
         public option: string;
 
         /**
          * Creates a new RangeMeta instance using the specified properties.
-         * @param {hlcmsg.RangeMeta$Properties=} [properties] Properties to set
-         * @returns {hlcmsg.RangeMeta} RangeMeta instance
+         * @param [properties] Properties to set
+         * @returns RangeMeta instance
          */
-        public static create(properties?: hlcmsg.RangeMeta$Properties): hlcmsg.RangeMeta;
+        public static create(properties?: hlcmsg.IRangeMeta): hlcmsg.RangeMeta;
 
         /**
          * Encodes the specified RangeMeta message. Does not implicitly {@link hlcmsg.RangeMeta.verify|verify} messages.
-         * @param {hlcmsg.RangeMeta$Properties} message RangeMeta message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message RangeMeta message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encode(message: hlcmsg.RangeMeta$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: hlcmsg.IRangeMeta, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Encodes the specified RangeMeta message, length delimited. Does not implicitly {@link hlcmsg.RangeMeta.verify|verify} messages.
-         * @param {hlcmsg.RangeMeta$Properties} message RangeMeta message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message RangeMeta message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encodeDelimited(message: hlcmsg.RangeMeta$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: hlcmsg.IRangeMeta, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a RangeMeta message from the specified reader or buffer.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {hlcmsg.RangeMeta} RangeMeta
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns RangeMeta
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -401,8 +323,8 @@ export namespace hlcmsg {
 
         /**
          * Decodes a RangeMeta message from the specified reader or buffer, length delimited.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {hlcmsg.RangeMeta} RangeMeta
+         * @param reader Reader or buffer to decode from
+         * @returns RangeMeta
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -410,103 +332,80 @@ export namespace hlcmsg {
 
         /**
          * Verifies a RangeMeta message.
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
          */
-        public static verify(message: { [k: string]: any }): string;
+        public static verify(message: { [k: string]: any }): (string|null);
 
         /**
          * Creates a RangeMeta message from a plain object. Also converts values to their respective internal types.
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.RangeMeta} RangeMeta
+         * @param object Plain object
+         * @returns RangeMeta
          */
         public static fromObject(object: { [k: string]: any }): hlcmsg.RangeMeta;
 
         /**
-         * Creates a RangeMeta message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.RangeMeta.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.RangeMeta} RangeMeta
-         */
-        public static from(object: { [k: string]: any }): hlcmsg.RangeMeta;
-
-        /**
          * Creates a plain object from a RangeMeta message. Also converts values to other types if specified.
-         * @param {hlcmsg.RangeMeta} message RangeMeta
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
+         * @param message RangeMeta
+         * @param [options] Conversion options
+         * @returns Plain object
          */
-        public static toObject(message: hlcmsg.RangeMeta, options?: $protobuf.ConversionOptions): { [k: string]: any };
-
-        /**
-         * Creates a plain object from this RangeMeta message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: hlcmsg.RangeMeta, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
          * Converts this RangeMeta to JSON.
-         * @returns {Object.<string,*>} JSON object
+         * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
     }
 
-    type IdList$Properties = {
-        arr?: number[];
-    };
+    /** Properties of an IdList. */
+    interface IIdList {
 
-    /**
-     * Constructs a new IdList.
-     * @exports hlcmsg.IdList
-     * @constructor
-     * @param {hlcmsg.IdList$Properties=} [properties] Properties to set
-     */
-    class IdList {
+        /** IdList arr */
+        arr?: (number[]|null);
+    }
+
+    /** Represents an IdList. */
+    class IdList implements IIdList {
 
         /**
          * Constructs a new IdList.
-         * @exports hlcmsg.IdList
-         * @constructor
-         * @param {hlcmsg.IdList$Properties=} [properties] Properties to set
+         * @param [properties] Properties to set
          */
-        constructor(properties?: hlcmsg.IdList$Properties);
+        constructor(properties?: hlcmsg.IIdList);
 
-        /**
-         * IdList arr.
-         * @type {Array.<number>}
-         */
+        /** IdList arr. */
         public arr: number[];
 
         /**
          * Creates a new IdList instance using the specified properties.
-         * @param {hlcmsg.IdList$Properties=} [properties] Properties to set
-         * @returns {hlcmsg.IdList} IdList instance
+         * @param [properties] Properties to set
+         * @returns IdList instance
          */
-        public static create(properties?: hlcmsg.IdList$Properties): hlcmsg.IdList;
+        public static create(properties?: hlcmsg.IIdList): hlcmsg.IdList;
 
         /**
          * Encodes the specified IdList message. Does not implicitly {@link hlcmsg.IdList.verify|verify} messages.
-         * @param {hlcmsg.IdList$Properties} message IdList message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message IdList message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encode(message: hlcmsg.IdList$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: hlcmsg.IIdList, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Encodes the specified IdList message, length delimited. Does not implicitly {@link hlcmsg.IdList.verify|verify} messages.
-         * @param {hlcmsg.IdList$Properties} message IdList message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
+         * @param message IdList message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
          */
-        public static encodeDelimited(message: hlcmsg.IdList$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: hlcmsg.IIdList, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes an IdList message from the specified reader or buffer.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {hlcmsg.IdList} IdList
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns IdList
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -514,8 +413,8 @@ export namespace hlcmsg {
 
         /**
          * Decodes an IdList message from the specified reader or buffer, length delimited.
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {hlcmsg.IdList} IdList
+         * @param reader Reader or buffer to decode from
+         * @returns IdList
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -523,45 +422,29 @@ export namespace hlcmsg {
 
         /**
          * Verifies an IdList message.
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
          */
-        public static verify(message: { [k: string]: any }): string;
+        public static verify(message: { [k: string]: any }): (string|null);
 
         /**
          * Creates an IdList message from a plain object. Also converts values to their respective internal types.
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.IdList} IdList
+         * @param object Plain object
+         * @returns IdList
          */
         public static fromObject(object: { [k: string]: any }): hlcmsg.IdList;
 
         /**
-         * Creates an IdList message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.IdList.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.IdList} IdList
-         */
-        public static from(object: { [k: string]: any }): hlcmsg.IdList;
-
-        /**
          * Creates a plain object from an IdList message. Also converts values to other types if specified.
-         * @param {hlcmsg.IdList} message IdList
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
+         * @param message IdList
+         * @param [options] Conversion options
+         * @returns Plain object
          */
-        public static toObject(message: hlcmsg.IdList, options?: $protobuf.ConversionOptions): { [k: string]: any };
-
-        /**
-         * Creates a plain object from this IdList message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        public toObject(options?: $protobuf.ConversionOptions): { [k: string]: any };
+        public static toObject(message: hlcmsg.IdList, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
          * Converts this IdList to JSON.
-         * @returns {Object.<string,*>} JSON object
+         * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
     }

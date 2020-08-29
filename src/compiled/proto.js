@@ -1,4 +1,4 @@
-/*eslint-disable block-scoped-var, no-redeclare, no-control-regex, no-prototype-builtins*/
+/*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
 "use strict";
 
 var $protobuf = require("protobufjs/minimal");
@@ -22,19 +22,21 @@ $root.hlcmsg = (function() {
 
         /**
          * Properties of a HlcResp.
-         * @typedef hlcmsg.HlcResp$Properties
-         * @type {Object}
-         * @property {hlcmsg.HlcResp.RespCode} [code] HlcResp code.
-         * @property {string} [msg] HlcResp msg.
-         * @property {Array.<hlcmsg.Pagenote$Properties>} [pagenoteList] HlcResp pagenoteList.
-         * @property {hlcmsg.IdList$Properties} [idList] HlcResp idList.
+         * @memberof hlcmsg
+         * @interface IHlcResp
+         * @property {hlcmsg.HlcResp.RespCode|null} [code] HlcResp code
+         * @property {string|null} [msg] HlcResp msg
+         * @property {Array.<hlcmsg.IPagenote>|null} [pagenoteList] HlcResp pagenoteList
+         * @property {hlcmsg.IIdList|null} [idList] HlcResp idList
          */
 
         /**
          * Constructs a new HlcResp.
-         * @exports hlcmsg.HlcResp
+         * @memberof hlcmsg
+         * @classdesc Represents a HlcResp.
+         * @implements IHlcResp
          * @constructor
-         * @param {hlcmsg.HlcResp$Properties=} [properties] Properties to set
+         * @param {hlcmsg.IHlcResp=} [properties] Properties to set
          */
         function HlcResp(properties) {
             this.pagenoteList = [];
@@ -46,31 +48,42 @@ $root.hlcmsg = (function() {
 
         /**
          * HlcResp code.
-         * @type {hlcmsg.HlcResp.RespCode}
+         * @member {hlcmsg.HlcResp.RespCode} code
+         * @memberof hlcmsg.HlcResp
+         * @instance
          */
         HlcResp.prototype.code = 0;
 
         /**
          * HlcResp msg.
-         * @type {string}
+         * @member {string} msg
+         * @memberof hlcmsg.HlcResp
+         * @instance
          */
         HlcResp.prototype.msg = "";
 
         /**
          * HlcResp pagenoteList.
-         * @type {Array.<hlcmsg.Pagenote$Properties>}
+         * @member {Array.<hlcmsg.IPagenote>} pagenoteList
+         * @memberof hlcmsg.HlcResp
+         * @instance
          */
         HlcResp.prototype.pagenoteList = $util.emptyArray;
 
         /**
          * HlcResp idList.
-         * @type {(hlcmsg.IdList$Properties|null)}
+         * @member {hlcmsg.IIdList|null|undefined} idList
+         * @memberof hlcmsg.HlcResp
+         * @instance
          */
         HlcResp.prototype.idList = null;
 
         /**
          * Creates a new HlcResp instance using the specified properties.
-         * @param {hlcmsg.HlcResp$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof hlcmsg.HlcResp
+         * @static
+         * @param {hlcmsg.IHlcResp=} [properties] Properties to set
          * @returns {hlcmsg.HlcResp} HlcResp instance
          */
         HlcResp.create = function create(properties) {
@@ -79,28 +92,34 @@ $root.hlcmsg = (function() {
 
         /**
          * Encodes the specified HlcResp message. Does not implicitly {@link hlcmsg.HlcResp.verify|verify} messages.
-         * @param {hlcmsg.HlcResp$Properties} message HlcResp message or plain object to encode
+         * @function encode
+         * @memberof hlcmsg.HlcResp
+         * @static
+         * @param {hlcmsg.IHlcResp} message HlcResp message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         HlcResp.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.code != null && message.hasOwnProperty("code"))
-                writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.code);
-            if (message.msg != null && message.hasOwnProperty("msg"))
+            if (message.code != null && Object.hasOwnProperty.call(message, "code"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.code);
+            if (message.msg != null && Object.hasOwnProperty.call(message, "msg"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.msg);
             if (message.pagenoteList != null && message.pagenoteList.length)
                 for (var i = 0; i < message.pagenoteList.length; ++i)
                     $root.hlcmsg.Pagenote.encode(message.pagenoteList[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.idList != null && message.hasOwnProperty("idList"))
+            if (message.idList != null && Object.hasOwnProperty.call(message, "idList"))
                 $root.hlcmsg.IdList.encode(message.idList, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
         /**
          * Encodes the specified HlcResp message, length delimited. Does not implicitly {@link hlcmsg.HlcResp.verify|verify} messages.
-         * @param {hlcmsg.HlcResp$Properties} message HlcResp message or plain object to encode
+         * @function encodeDelimited
+         * @memberof hlcmsg.HlcResp
+         * @static
+         * @param {hlcmsg.IHlcResp} message HlcResp message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -110,6 +129,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a HlcResp message from the specified reader or buffer.
+         * @function decode
+         * @memberof hlcmsg.HlcResp
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {hlcmsg.HlcResp} HlcResp
@@ -124,7 +146,7 @@ $root.hlcmsg = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.code = reader.uint32();
+                    message.code = reader.int32();
                     break;
                 case 2:
                     message.msg = reader.string();
@@ -147,6 +169,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a HlcResp message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof hlcmsg.HlcResp
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {hlcmsg.HlcResp} HlcResp
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -154,14 +179,17 @@ $root.hlcmsg = (function() {
          */
         HlcResp.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a HlcResp message.
+         * @function verify
+         * @memberof hlcmsg.HlcResp
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         HlcResp.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -196,6 +224,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Creates a HlcResp message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof hlcmsg.HlcResp
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {hlcmsg.HlcResp} HlcResp
          */
@@ -234,18 +265,12 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a HlcResp message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.HlcResp.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.HlcResp} HlcResp
-         */
-        HlcResp.from = HlcResp.fromObject;
-
-        /**
          * Creates a plain object from a HlcResp message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof hlcmsg.HlcResp
+         * @static
          * @param {hlcmsg.HlcResp} message HlcResp
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         HlcResp.toObject = function toObject(message, options) {
@@ -274,16 +299,10 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a plain object from this HlcResp message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        HlcResp.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this HlcResp to JSON.
+         * @function toJSON
+         * @memberof hlcmsg.HlcResp
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         HlcResp.prototype.toJSON = function toJSON() {
@@ -292,8 +311,7 @@ $root.hlcmsg = (function() {
 
         /**
          * RespCode enum.
-         * @name RespCode
-         * @memberof hlcmsg.HlcResp
+         * @name hlcmsg.HlcResp.RespCode
          * @enum {number}
          * @property {number} FAIL=0 FAIL value
          * @property {number} SUC=1 SUC value
@@ -312,19 +330,21 @@ $root.hlcmsg = (function() {
 
         /**
          * Properties of a Pagenote.
-         * @typedef hlcmsg.Pagenote$Properties
-         * @type {Object}
-         * @property {number} [pageid] Pagenote pageid.
-         * @property {number} [uid] Pagenote uid.
-         * @property {Array.<hlcmsg.RangeMeta$Properties>} [highlights] Pagenote highlights.
-         * @property {string} [url] Pagenote url.
+         * @memberof hlcmsg
+         * @interface IPagenote
+         * @property {number|null} [pageid] Pagenote pageid
+         * @property {number|null} [uid] Pagenote uid
+         * @property {Array.<hlcmsg.IRangeMeta>|null} [highlights] Pagenote highlights
+         * @property {string|null} [url] Pagenote url
          */
 
         /**
          * Constructs a new Pagenote.
-         * @exports hlcmsg.Pagenote
+         * @memberof hlcmsg
+         * @classdesc Represents a Pagenote.
+         * @implements IPagenote
          * @constructor
-         * @param {hlcmsg.Pagenote$Properties=} [properties] Properties to set
+         * @param {hlcmsg.IPagenote=} [properties] Properties to set
          */
         function Pagenote(properties) {
             this.highlights = [];
@@ -336,31 +356,42 @@ $root.hlcmsg = (function() {
 
         /**
          * Pagenote pageid.
-         * @type {number}
+         * @member {number} pageid
+         * @memberof hlcmsg.Pagenote
+         * @instance
          */
         Pagenote.prototype.pageid = 0;
 
         /**
          * Pagenote uid.
-         * @type {number}
+         * @member {number} uid
+         * @memberof hlcmsg.Pagenote
+         * @instance
          */
         Pagenote.prototype.uid = 0;
 
         /**
          * Pagenote highlights.
-         * @type {Array.<hlcmsg.RangeMeta$Properties>}
+         * @member {Array.<hlcmsg.IRangeMeta>} highlights
+         * @memberof hlcmsg.Pagenote
+         * @instance
          */
         Pagenote.prototype.highlights = $util.emptyArray;
 
         /**
          * Pagenote url.
-         * @type {string}
+         * @member {string} url
+         * @memberof hlcmsg.Pagenote
+         * @instance
          */
         Pagenote.prototype.url = "";
 
         /**
          * Creates a new Pagenote instance using the specified properties.
-         * @param {hlcmsg.Pagenote$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof hlcmsg.Pagenote
+         * @static
+         * @param {hlcmsg.IPagenote=} [properties] Properties to set
          * @returns {hlcmsg.Pagenote} Pagenote instance
          */
         Pagenote.create = function create(properties) {
@@ -369,28 +400,34 @@ $root.hlcmsg = (function() {
 
         /**
          * Encodes the specified Pagenote message. Does not implicitly {@link hlcmsg.Pagenote.verify|verify} messages.
-         * @param {hlcmsg.Pagenote$Properties} message Pagenote message or plain object to encode
+         * @function encode
+         * @memberof hlcmsg.Pagenote
+         * @static
+         * @param {hlcmsg.IPagenote} message Pagenote message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         Pagenote.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.pageid != null && message.hasOwnProperty("pageid"))
+            if (message.pageid != null && Object.hasOwnProperty.call(message, "pageid"))
                 writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.pageid);
-            if (message.uid != null && message.hasOwnProperty("uid"))
+            if (message.uid != null && Object.hasOwnProperty.call(message, "uid"))
                 writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.uid);
             if (message.highlights != null && message.highlights.length)
                 for (var i = 0; i < message.highlights.length; ++i)
                     $root.hlcmsg.RangeMeta.encode(message.highlights[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.url != null && message.hasOwnProperty("url"))
+            if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                 writer.uint32(/* id 4, wireType 2 =*/34).string(message.url);
             return writer;
         };
 
         /**
          * Encodes the specified Pagenote message, length delimited. Does not implicitly {@link hlcmsg.Pagenote.verify|verify} messages.
-         * @param {hlcmsg.Pagenote$Properties} message Pagenote message or plain object to encode
+         * @function encodeDelimited
+         * @memberof hlcmsg.Pagenote
+         * @static
+         * @param {hlcmsg.IPagenote} message Pagenote message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -400,6 +437,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a Pagenote message from the specified reader or buffer.
+         * @function decode
+         * @memberof hlcmsg.Pagenote
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {hlcmsg.Pagenote} Pagenote
@@ -437,6 +477,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a Pagenote message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof hlcmsg.Pagenote
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {hlcmsg.Pagenote} Pagenote
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -444,14 +487,17 @@ $root.hlcmsg = (function() {
          */
         Pagenote.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a Pagenote message.
+         * @function verify
+         * @memberof hlcmsg.Pagenote
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         Pagenote.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -479,6 +525,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Creates a Pagenote message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof hlcmsg.Pagenote
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {hlcmsg.Pagenote} Pagenote
          */
@@ -506,18 +555,12 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a Pagenote message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.Pagenote.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.Pagenote} Pagenote
-         */
-        Pagenote.from = Pagenote.fromObject;
-
-        /**
          * Creates a plain object from a Pagenote message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof hlcmsg.Pagenote
+         * @static
          * @param {hlcmsg.Pagenote} message Pagenote
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         Pagenote.toObject = function toObject(message, options) {
@@ -546,16 +589,10 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a plain object from this Pagenote message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        Pagenote.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this Pagenote to JSON.
+         * @function toJSON
+         * @memberof hlcmsg.Pagenote
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         Pagenote.prototype.toJSON = function toJSON() {
@@ -569,23 +606,25 @@ $root.hlcmsg = (function() {
 
         /**
          * Properties of a RangeMeta.
-         * @typedef hlcmsg.RangeMeta$Properties
-         * @type {Object}
-         * @property {number} [id] RangeMeta id.
-         * @property {string} [anchor] RangeMeta anchor.
-         * @property {string} [start] RangeMeta start.
-         * @property {number} [startOffset] RangeMeta startOffset.
-         * @property {string} [end] RangeMeta end.
-         * @property {number} [endOffset] RangeMeta endOffset.
-         * @property {string} [text] RangeMeta text.
-         * @property {string} [option] RangeMeta option.
+         * @memberof hlcmsg
+         * @interface IRangeMeta
+         * @property {number|null} [id] RangeMeta id
+         * @property {string|null} [anchor] RangeMeta anchor
+         * @property {string|null} [start] RangeMeta start
+         * @property {number|null} [startOffset] RangeMeta startOffset
+         * @property {string|null} [end] RangeMeta end
+         * @property {number|null} [endOffset] RangeMeta endOffset
+         * @property {string|null} [text] RangeMeta text
+         * @property {string|null} [option] RangeMeta option
          */
 
         /**
          * Constructs a new RangeMeta.
-         * @exports hlcmsg.RangeMeta
+         * @memberof hlcmsg
+         * @classdesc Represents a RangeMeta.
+         * @implements IRangeMeta
          * @constructor
-         * @param {hlcmsg.RangeMeta$Properties=} [properties] Properties to set
+         * @param {hlcmsg.IRangeMeta=} [properties] Properties to set
          */
         function RangeMeta(properties) {
             if (properties)
@@ -596,55 +635,74 @@ $root.hlcmsg = (function() {
 
         /**
          * RangeMeta id.
-         * @type {number}
+         * @member {number} id
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.id = 0;
 
         /**
          * RangeMeta anchor.
-         * @type {string}
+         * @member {string} anchor
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.anchor = "";
 
         /**
          * RangeMeta start.
-         * @type {string}
+         * @member {string} start
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.start = "";
 
         /**
          * RangeMeta startOffset.
-         * @type {number}
+         * @member {number} startOffset
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.startOffset = 0;
 
         /**
          * RangeMeta end.
-         * @type {string}
+         * @member {string} end
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.end = "";
 
         /**
          * RangeMeta endOffset.
-         * @type {number}
+         * @member {number} endOffset
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.endOffset = 0;
 
         /**
          * RangeMeta text.
-         * @type {string}
+         * @member {string} text
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.text = "";
 
         /**
          * RangeMeta option.
-         * @type {string}
+         * @member {string} option
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          */
         RangeMeta.prototype.option = "";
 
         /**
          * Creates a new RangeMeta instance using the specified properties.
-         * @param {hlcmsg.RangeMeta$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof hlcmsg.RangeMeta
+         * @static
+         * @param {hlcmsg.IRangeMeta=} [properties] Properties to set
          * @returns {hlcmsg.RangeMeta} RangeMeta instance
          */
         RangeMeta.create = function create(properties) {
@@ -653,35 +711,41 @@ $root.hlcmsg = (function() {
 
         /**
          * Encodes the specified RangeMeta message. Does not implicitly {@link hlcmsg.RangeMeta.verify|verify} messages.
-         * @param {hlcmsg.RangeMeta$Properties} message RangeMeta message or plain object to encode
+         * @function encode
+         * @memberof hlcmsg.RangeMeta
+         * @static
+         * @param {hlcmsg.IRangeMeta} message RangeMeta message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
         RangeMeta.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.id);
-            if (message.anchor != null && message.hasOwnProperty("anchor"))
+            if (message.anchor != null && Object.hasOwnProperty.call(message, "anchor"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.anchor);
-            if (message.start != null && message.hasOwnProperty("start"))
+            if (message.start != null && Object.hasOwnProperty.call(message, "start"))
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.start);
-            if (message.startOffset != null && message.hasOwnProperty("startOffset"))
+            if (message.startOffset != null && Object.hasOwnProperty.call(message, "startOffset"))
                 writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.startOffset);
-            if (message.end != null && message.hasOwnProperty("end"))
+            if (message.end != null && Object.hasOwnProperty.call(message, "end"))
                 writer.uint32(/* id 5, wireType 2 =*/42).string(message.end);
-            if (message.endOffset != null && message.hasOwnProperty("endOffset"))
+            if (message.endOffset != null && Object.hasOwnProperty.call(message, "endOffset"))
                 writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.endOffset);
-            if (message.text != null && message.hasOwnProperty("text"))
+            if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                 writer.uint32(/* id 7, wireType 2 =*/58).string(message.text);
-            if (message.option != null && message.hasOwnProperty("option"))
+            if (message.option != null && Object.hasOwnProperty.call(message, "option"))
                 writer.uint32(/* id 8, wireType 2 =*/66).string(message.option);
             return writer;
         };
 
         /**
          * Encodes the specified RangeMeta message, length delimited. Does not implicitly {@link hlcmsg.RangeMeta.verify|verify} messages.
-         * @param {hlcmsg.RangeMeta$Properties} message RangeMeta message or plain object to encode
+         * @function encodeDelimited
+         * @memberof hlcmsg.RangeMeta
+         * @static
+         * @param {hlcmsg.IRangeMeta} message RangeMeta message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -691,6 +755,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a RangeMeta message from the specified reader or buffer.
+         * @function decode
+         * @memberof hlcmsg.RangeMeta
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {hlcmsg.RangeMeta} RangeMeta
@@ -738,6 +805,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes a RangeMeta message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof hlcmsg.RangeMeta
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {hlcmsg.RangeMeta} RangeMeta
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -745,14 +815,17 @@ $root.hlcmsg = (function() {
          */
         RangeMeta.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies a RangeMeta message.
+         * @function verify
+         * @memberof hlcmsg.RangeMeta
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         RangeMeta.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -786,6 +859,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Creates a RangeMeta message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof hlcmsg.RangeMeta
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {hlcmsg.RangeMeta} RangeMeta
          */
@@ -813,18 +889,12 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a RangeMeta message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.RangeMeta.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.RangeMeta} RangeMeta
-         */
-        RangeMeta.from = RangeMeta.fromObject;
-
-        /**
          * Creates a plain object from a RangeMeta message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof hlcmsg.RangeMeta
+         * @static
          * @param {hlcmsg.RangeMeta} message RangeMeta
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         RangeMeta.toObject = function toObject(message, options) {
@@ -861,16 +931,10 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a plain object from this RangeMeta message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RangeMeta.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this RangeMeta to JSON.
+         * @function toJSON
+         * @memberof hlcmsg.RangeMeta
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         RangeMeta.prototype.toJSON = function toJSON() {
@@ -884,16 +948,18 @@ $root.hlcmsg = (function() {
 
         /**
          * Properties of an IdList.
-         * @typedef hlcmsg.IdList$Properties
-         * @type {Object}
-         * @property {Array.<number>} [arr] IdList arr.
+         * @memberof hlcmsg
+         * @interface IIdList
+         * @property {Array.<number>|null} [arr] IdList arr
          */
 
         /**
          * Constructs a new IdList.
-         * @exports hlcmsg.IdList
+         * @memberof hlcmsg
+         * @classdesc Represents an IdList.
+         * @implements IIdList
          * @constructor
-         * @param {hlcmsg.IdList$Properties=} [properties] Properties to set
+         * @param {hlcmsg.IIdList=} [properties] Properties to set
          */
         function IdList(properties) {
             this.arr = [];
@@ -905,13 +971,18 @@ $root.hlcmsg = (function() {
 
         /**
          * IdList arr.
-         * @type {Array.<number>}
+         * @member {Array.<number>} arr
+         * @memberof hlcmsg.IdList
+         * @instance
          */
         IdList.prototype.arr = $util.emptyArray;
 
         /**
          * Creates a new IdList instance using the specified properties.
-         * @param {hlcmsg.IdList$Properties=} [properties] Properties to set
+         * @function create
+         * @memberof hlcmsg.IdList
+         * @static
+         * @param {hlcmsg.IIdList=} [properties] Properties to set
          * @returns {hlcmsg.IdList} IdList instance
          */
         IdList.create = function create(properties) {
@@ -920,7 +991,10 @@ $root.hlcmsg = (function() {
 
         /**
          * Encodes the specified IdList message. Does not implicitly {@link hlcmsg.IdList.verify|verify} messages.
-         * @param {hlcmsg.IdList$Properties} message IdList message or plain object to encode
+         * @function encode
+         * @memberof hlcmsg.IdList
+         * @static
+         * @param {hlcmsg.IIdList} message IdList message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -938,7 +1012,10 @@ $root.hlcmsg = (function() {
 
         /**
          * Encodes the specified IdList message, length delimited. Does not implicitly {@link hlcmsg.IdList.verify|verify} messages.
-         * @param {hlcmsg.IdList$Properties} message IdList message or plain object to encode
+         * @function encodeDelimited
+         * @memberof hlcmsg.IdList
+         * @static
+         * @param {hlcmsg.IIdList} message IdList message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -948,6 +1025,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes an IdList message from the specified reader or buffer.
+         * @function decode
+         * @memberof hlcmsg.IdList
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
          * @returns {hlcmsg.IdList} IdList
@@ -981,6 +1061,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Decodes an IdList message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof hlcmsg.IdList
+         * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @returns {hlcmsg.IdList} IdList
          * @throws {Error} If the payload is not a reader or valid buffer
@@ -988,14 +1071,17 @@ $root.hlcmsg = (function() {
          */
         IdList.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
-                reader = $Reader(reader);
+                reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
          * Verifies an IdList message.
+         * @function verify
+         * @memberof hlcmsg.IdList
+         * @static
          * @param {Object.<string,*>} message Plain object to verify
-         * @returns {?string} `null` if valid, otherwise the reason why it is not
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
         IdList.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
@@ -1012,6 +1098,9 @@ $root.hlcmsg = (function() {
 
         /**
          * Creates an IdList message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof hlcmsg.IdList
+         * @static
          * @param {Object.<string,*>} object Plain object
          * @returns {hlcmsg.IdList} IdList
          */
@@ -1030,18 +1119,12 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates an IdList message from a plain object. Also converts values to their respective internal types.
-         * This is an alias of {@link hlcmsg.IdList.fromObject}.
-         * @function
-         * @param {Object.<string,*>} object Plain object
-         * @returns {hlcmsg.IdList} IdList
-         */
-        IdList.from = IdList.fromObject;
-
-        /**
          * Creates a plain object from an IdList message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof hlcmsg.IdList
+         * @static
          * @param {hlcmsg.IdList} message IdList
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
         IdList.toObject = function toObject(message, options) {
@@ -1059,16 +1142,10 @@ $root.hlcmsg = (function() {
         };
 
         /**
-         * Creates a plain object from this IdList message. Also converts values to other types if specified.
-         * @param {$protobuf.ConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        IdList.prototype.toObject = function toObject(options) {
-            return this.constructor.toObject(this, options);
-        };
-
-        /**
          * Converts this IdList to JSON.
+         * @function toJSON
+         * @memberof hlcmsg.IdList
+         * @instance
          * @returns {Object.<string,*>} JSON object
          */
         IdList.prototype.toJSON = function toJSON() {
