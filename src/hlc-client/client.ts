@@ -37,8 +37,9 @@ export class Client implements IApp {
                      onSuccess?: (block: Block)=>void,
                      onFail?:(reason: string)=>void): void {
     let block: Block = extractSelectedBlock(window, document);
-    if (block == null) {
+    if (!block || block == null) {
       onFail && onFail("no selected text");
+      return;
     }
     this.m_app.addBlock(block, renderOption);
     this.saveBlock(block, (blk: Block, newId:string) => {

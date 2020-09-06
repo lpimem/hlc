@@ -20,8 +20,11 @@ export function addRequestListeners(app: IApp){
           send("");
         }, (error) => {
           configs.toggleEnabled();
+          configs.setBlockRenderOption(newValue);
+          send(newValue);
         });
       }catch(ignore){logger.debug(ignore);}
+      return;
     }
 
     if (current == newValue){

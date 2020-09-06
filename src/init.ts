@@ -42,7 +42,7 @@ function createApp(doc: Document, uid:number, token: string){
   addRequestListeners(app);
   MsgClient.start();
   patchStyle(doc);
-  logger.info("hlc inited.");
+  console.info("hlc inited.");
 }
 
 function patchStyle(doc: Document){

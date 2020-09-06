@@ -1,4 +1,4 @@
-import { error, info } from "logez";
+import { debug, error, info, warn } from "logez";
 import { CSMessage } from "./define";
 
 let handlers: { [msgtype: string]: (request: any, sendMessage: (resp: any) => void) => void } = {};
@@ -18,7 +18,9 @@ export function deleteMessageListener(msgtype:string){
 export function start(){
   chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse)=>{
+      debug("chrome message request: ", request);
       if (!ensureFromExtension(sender)){
+        warn("request is not from expected sender:", request, sender);
         return;
       }
       let msg = request as CSMessage<any>;
